@@ -19,7 +19,7 @@ function Card(props) {
   }
 
   return (
-    <Link to={`/books/${id}`} data-test-id='card' className='btn'>
+    <Link to={`/books/all/${id}`} data-test-id='card' className='btn'>
       <div className='card__item ' id={id}>
         {img ? (
           <div className='card__element'>

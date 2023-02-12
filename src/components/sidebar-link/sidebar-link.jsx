@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom';
 
 function SidebarLink(props) {
-  const { text, quantity, onClick } = props;
+  const { name, path, onClick } = props;
 
   return (
     <li className='sidebar__li'>
-      <NavLink onClick={onClick} to={`/category/${text}`} className='sidebar__link-text'>
-        {text}
+      <NavLink onClick={onClick} to={`/category/${path}`} className='sidebar__link-text'>
+        {name}
       </NavLink>
-      <span className='sidebar__link-span'>{quantity}</span>
+      <span className='sidebar__link-span'>{2}</span>
     </li>
   );
 }

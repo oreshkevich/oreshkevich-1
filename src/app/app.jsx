@@ -67,7 +67,7 @@ function App() {
               }
             />
             <Route
-              path='/books/:id'
+              path='/books/all/:id'
               element={
                 <BookPage
                   onClick={handleClickHide}

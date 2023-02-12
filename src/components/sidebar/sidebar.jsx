@@ -4,7 +4,7 @@ import { NavLink, useParams } from 'react-router-dom';
 
 import strokeArrow from '../../assets/svg/stroke.svg';
 import strokeBtn from '../../assets/svg/stroke-btn.svg';
-import { getPosts } from '../../features/post/post-slice';
+import { getCategories } from '../../features/category/category-slice';
 import { useWidth } from '../../hook';
 import { SidebarLink } from '../sidebar-link';
 import { Spinner } from '../spinner';
@@ -13,26 +13,19 @@ import './sidebar.scss';
 
 function Sidebar(props) {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.post.posts);
-  const loading = useSelector((state) => state.post.loading);
+  const categories = useSelector((state) => state.category.categories);
+
   const { onClick, location, clickHide, clickHideMenu, onShow } = props;
 
   const params = useParams();
 
-  const bookCategory = posts.map((a) => a.categories[0]);
-
-  const objReduce = bookCategory.reduce((acc, el) => {
-    acc[el] = (acc[el] || 0) + 1;
-
-    return acc;
-  }, {});
-  const result = Object.entries(objReduce).map((entry, index) => ({ id: index, text: [entry[0]], quantity: entry[1] }));
+  const bookCategory = categories.map((a) => a.path);
 
   const bookIncludes = bookCategory.includes(params.name);
   const isMobile = useWidth();
 
   useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getCategories());
   }, [dispatch]);
 
   return (
@@ -78,7 +71,7 @@ function Sidebar(props) {
                     Все книги
                   </NavLink>
                 </li>
-                {result.map((value) => (
+                {categories.map((value) => (
                   <SidebarLink key={value.id} {...value} onClick={onClick} />
                 ))}
               </ul>
