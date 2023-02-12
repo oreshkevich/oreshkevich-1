@@ -42,7 +42,7 @@ function Sidebar(props) {
                 data-test-id={`${isMobile ? 'navigation-showcase' : 'burger-showcase'}`}
               >
                 <NavLink
-                  to='/'
+                  to='/books/all'
                   className={({ isActive }) =>
                     isActive || bookIncludes ? 'sidebar__link active-link' : 'sidebar__link'
                   }

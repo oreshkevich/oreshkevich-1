@@ -17,9 +17,10 @@ function CardVertical(props) {
 
     time = `${month}.${data}`;
   }
+  const nameCategory = name ? name : 'all';
 
   return (
-    <Link to={`/books/${name}/${id}`} data-test-id='card' className='btn'>
+    <Link to={`/books/${nameCategory}/${id}`} data-test-id='card' className='btn'>
       <div className='card-vertical__item ' id={id}>
         {img ? (
           <div className='card-vertical__element'>

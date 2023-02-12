@@ -15,7 +15,7 @@ import { SwiperNew } from '../swiper';
 import './book-item.scss';
 
 function BookItem() {
-  const { id } = useParams();
+  const { name, id } = useParams();
 
   const [onShow, setOnShow] = useState(false);
 
@@ -48,7 +48,7 @@ function BookItem() {
         <div>
           <div className='book-list__nav '>
             <div className='container'>
-              <span className='book-list__page'>{books.categories} книги</span>
+              <span className='book-list__page'>{name} книги</span>
               <span className='book-list__span'> / </span>
               <span className='book-list__page '>{books.title}</span>
             </div>
@@ -155,7 +155,7 @@ function BookItem() {
                 <div className='book-list__feedback-wrap'>
                   <div className='book-list__button-wrap'>
                     <h4 className='book-list__elem-title book-list__elem-title_feedback'>
-                      Отзывы <span>{books.rating}</span>
+                      Отзывы <span>{books.comments.length}</span>
                     </h4>
                     <button
                       data-test-id='button-hide-reviews'
