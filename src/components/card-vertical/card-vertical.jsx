@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import iconOther from '../../assets/img/icon_Other.png';
-import star from '../../assets/svg/star-1.svg';
-import starNotPainted from '../../assets/svg/star-2.svg';
+import { Rating } from '../rating/rating';
 
 import './card-vertical.scss';
 
 function CardVertical(props) {
   const { id, img, text, autour, booking, year, rating } = props;
   let time = '';
+  const { name } = useParams();
 
   if (booking) {
     const str = booking.dateOrder;
@@ -19,7 +19,7 @@ function CardVertical(props) {
   }
 
   return (
-    <Link to={`/books/all/${id}`} data-test-id='card' className='btn'>
+    <Link to={`/books/${name}/${id}`} data-test-id='card' className='btn'>
       <div className='card-vertical__item ' id={id}>
         {img ? (
           <div className='card-vertical__element'>
@@ -41,11 +41,7 @@ function CardVertical(props) {
           <div className='card-vertical__wrap-flex'>
             {rating ? (
               <div className='card-vertical__star-wrap'>
-                <img src={star} alt='star-1' />
-                <img src={star} alt='star-1' />
-                <img src={star} alt='star-1' />
-                <img src={starNotPainted} alt='star-1' />
-                <img src={starNotPainted} alt='star-1' />
+                <Rating rating={rating} />
               </div>
             ) : (
               <p className='card-vertical__estimation'>ещё нет оценок</p>

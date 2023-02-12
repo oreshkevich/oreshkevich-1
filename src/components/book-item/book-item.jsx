@@ -5,14 +5,14 @@ import { useParams } from 'react-router-dom';
 import iconOther from '../../assets/img/icon_Other.png';
 import strokeArrow from '../../assets/svg/icon-more.svg';
 import strokeBtn from '../../assets/svg/icon-response.svg';
-import star from '../../assets/svg/star-1.svg';
 import starNotPainted from '../../assets/svg/star-2.svg';
 import { getSearchId } from '../../features/book/book-slice';
 import { Comments } from '../comments';
+import { Rating } from '../rating/rating';
 import { Spinner } from '../spinner';
 import { SwiperNew } from '../swiper';
 
-import './book-list.scss';
+import './book-item.scss';
 
 function BookItem() {
   const { id } = useParams();
@@ -101,11 +101,7 @@ function BookItem() {
               <hr className='book-list__line' />
               {books.rating ? (
                 <div className='book-list__star-wrap'>
-                  <img src={star} alt='star-1' />
-                  <img src={star} alt='star-1' />
-                  <img src={star} alt='star-1' />
-                  <img src={star} alt='star-1' />
-                  <img src={starNotPainted} alt='star-1' />
+                  <Rating rating={books.rating} />
                   <span>{books.rating}</span>
                 </div>
               ) : (
@@ -154,12 +150,12 @@ function BookItem() {
                 <p> {books.producer}</p>
               </div>
             </div>
-            {books.rating ? (
+            {books.comments ? (
               <div className='book-list__feedback'>
                 <div className='book-list__feedback-wrap'>
                   <div className='book-list__button-wrap'>
                     <h4 className='book-list__elem-title book-list__elem-title_feedback'>
-                      Отзывы <span>2</span>
+                      Отзывы <span>{books.rating}</span>
                     </h4>
                     <button
                       data-test-id='button-hide-reviews'

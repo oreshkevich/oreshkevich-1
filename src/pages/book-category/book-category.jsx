@@ -1,4 +1,4 @@
-import { Category } from '../../components/category';
+import { Main } from '../../components/main';
 import { Sidebar } from '../../components/sidebar';
 
 import './book-category.scss';
@@ -13,7 +13,7 @@ export const BookCategory = ({ onClick, location, clickHideMenu, onShow, clickHi
         onShow={onShow}
         clickHide={clickHide}
       />
-      <Category />
+      <Main />
     </div>
   </div>
 );

@@ -5,7 +5,7 @@ function SidebarLink(props) {
 
   return (
     <li className='sidebar__li'>
-      <NavLink onClick={onClick} to={`/category/${path}`} className='sidebar__link-text'>
+      <NavLink onClick={onClick} to={`/books/${path}`} className='sidebar__link-text'>
         {name}
       </NavLink>
       <span className='sidebar__link-span'>{2}</span>

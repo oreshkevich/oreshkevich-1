@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import iconOther from '../../assets/img/icon_Other.png';
-import star from '../../assets/svg/star-1.svg';
-import starNotPainted from '../../assets/svg/star-2.svg';
+import { Rating } from '../rating/rating';
 
 import './card.scss';
 
 function Card(props) {
   const { id, img, text, autour, booking, year, rating } = props;
   let time = '';
+  const { name } = useParams();
 
   if (booking) {
     const str = booking.dateOrder;
@@ -19,7 +19,7 @@ function Card(props) {
   }
 
   return (
-    <Link to={`/books/all/${id}`} data-test-id='card' className='btn'>
+    <Link to={`/books/${name}/${id}`} data-test-id='card' className='btn'>
       <div className='card__item ' id={id}>
         {img ? (
           <div className='card__element'>
@@ -32,11 +32,7 @@ function Card(props) {
         )}
         {rating ? (
           <div className='card__star-wrap'>
-            <img src={star} alt='star-1' />
-            <img src={star} alt='star-1' />
-            <img src={star} alt='star-1' />
-            <img src={starNotPainted} alt='star-1' />
-            <img src={starNotPainted} alt='star-1' />
+            <Rating rating={rating} />
           </div>
         ) : (
           <p className='card__estimation'>ещё нет оценок</p>

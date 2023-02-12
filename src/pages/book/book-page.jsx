@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { BookItem } from '../../components/book-list';
+import { BookItem } from '../../components/book-item';
 import { Sidebar } from '../../components/sidebar';
 import { Toast } from '../../components/toast';
 import { useWidth } from '../../hook';

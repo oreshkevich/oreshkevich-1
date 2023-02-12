@@ -90,7 +90,6 @@ function Main() {
           </button>
         </div>
       </div>
-      {/* <Spinner /> */}
       {location ? (
         <div className='card__wrap'>{loading ? <Spinner /> : <Cards cards={bookCategory} />}</div>
       ) : (

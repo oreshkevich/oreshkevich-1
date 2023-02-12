@@ -55,7 +55,7 @@ function App() {
               }
             />
             <Route
-              path='/category/:name'
+              path='/books/:name'
               element={
                 <BookCategory
                   onClick={handleClickHide}
@@ -67,7 +67,7 @@ function App() {
               }
             />
             <Route
-              path='/books/all/:id'
+              path='/books/:name/:id'
               element={
                 <BookPage
                   onClick={handleClickHide}

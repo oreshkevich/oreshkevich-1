@@ -7,7 +7,6 @@ import strokeBtn from '../../assets/svg/stroke-btn.svg';
 import { getCategories } from '../../features/category/category-slice';
 import { useWidth } from '../../hook';
 import { SidebarLink } from '../sidebar-link';
-import { Spinner } from '../spinner';
 
 import './sidebar.scss';
 
@@ -20,8 +19,8 @@ function Sidebar(props) {
   const params = useParams();
 
   const bookCategory = categories.map((a) => a.path);
-
-  const bookIncludes = bookCategory.includes(params.name);
+  const bookAllCategory = [...bookCategory, 'all'];
+  const bookIncludes = bookAllCategory.includes(params.name);
   const isMobile = useWidth();
 
   useEffect(() => {
@@ -64,7 +63,7 @@ function Sidebar(props) {
                 <li className='sidebar__li'>
                   <NavLink
                     onClick={onClick}
-                    to='/'
+                    to='/books/all'
                     className='sidebar__link-text'
                     data-test-id={`${isMobile ? 'navigation-books' : 'burger-books'}`}
                   >
