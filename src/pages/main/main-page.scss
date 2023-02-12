@@ -1,0 +1,16 @@
+.grid {
+  display: grid;
+  grid-template-columns: 279px 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 6px;
+  padding-bottom: 54px;
+  margin-top: 46px;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 31px;
+  }
+}
