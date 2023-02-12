@@ -1,1 +1,1 @@
-export { BookList } from './book-list';
+export { BookItem } from './book-list';

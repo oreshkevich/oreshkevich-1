@@ -1,6 +1,7 @@
+import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { BookList } from '../../components/book-list';
+import { BookItem } from '../../components/book-list';
 import { Sidebar } from '../../components/sidebar';
 import { Toast } from '../../components/toast';
 import { useWidth } from '../../hook';
@@ -23,7 +24,19 @@ export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide }
           clickHide={clickHide}
         />
       ) : null}
-      {status === 'rejected' ? <Toast /> : <BookList />}
+      {status === 'rejected' ? (
+        <React.Fragment>
+          <Toast />{' '}
+          <div className='book-list__nav '>
+            <div className='container'>
+              <span className='book-list__page'>Бизнес книги</span>
+              <span className='book-list__span'> / </span>
+            </div>
+          </div>
+        </React.Fragment>
+      ) : (
+        <BookItem />
+      )}
     </div>
   );
 };

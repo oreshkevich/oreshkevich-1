@@ -1,12 +1,13 @@
-// import { Sidebar } from '../../components/sidebar';
+import { Sidebar } from '../../components/sidebar';
 import { Toast } from '../../components/toast';
 
 import './not-found.scss';
 
-export const NotFound = () => (
+export const NotFound = ({ onClick, location, clickHideMenu, onShow }) => (
   <div className='container '>
     <Toast />
-    {/* {location ? <Sidebar onClick={onClick} location={location} clickHideMenu={clickHideMenu} onShow={onShow} /> : null} */}
-    {/* <h2 className='not-found'>Page not found</h2> */}
+    {location ? <Sidebar onClick={onClick} location={location} clickHideMenu={clickHideMenu} onShow={onShow} /> : null}
+
+    <h2 className='not-found'>Page not found</h2>
   </div>
 );

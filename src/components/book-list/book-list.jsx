@@ -3,18 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import iconOther from '../../assets/img/icon_Other.png';
-import ivanImg from '../../assets/img/ivan.png';
 import strokeArrow from '../../assets/svg/icon-more.svg';
 import strokeBtn from '../../assets/svg/icon-response.svg';
 import star from '../../assets/svg/star-1.svg';
 import starNotPainted from '../../assets/svg/star-2.svg';
 import { getSearchId } from '../../features/book/book-slice';
+import { Comments } from '../comments';
 import { Spinner } from '../spinner';
 import { SwiperNew } from '../swiper';
 
 import './book-list.scss';
 
-function BookList() {
+function BookItem() {
   const { id } = useParams();
 
   const [onShow, setOnShow] = useState(false);
@@ -24,8 +24,7 @@ function BookList() {
   };
 
   const dispatch = useDispatch();
-  const books = useSelector((state) => state.book.books);
-  const loadingBook = useSelector((state) => state.book.loadingBook);
+  const { books, loadingBook } = useSelector((state) => state.book);
 
   useEffect(() => {
     dispatch(getSearchId(id));
@@ -49,7 +48,7 @@ function BookList() {
         <div>
           <div className='book-list__nav '>
             <div className='container'>
-              <span className='book-list__page'>Бизнес книги</span>
+              <span className='book-list__page'>{books.categories} книги</span>
               <span className='book-list__span'> / </span>
               <span className='book-list__page '>{books.title}</span>
             </div>
@@ -134,7 +133,7 @@ function BookList() {
                 <p> Формат</p>
               </div>
               <div className='book-list__grid-elem two'>
-                <p> Питер</p>
+                <p> {books.publish}</p>
                 <p> {books.issueYear}</p>
                 <p> {books.pages}</p>
                 <p> {books.cover}</p>
@@ -177,71 +176,7 @@ function BookList() {
                   </div>
                   {onShow ? <hr className='book-list__line' /> : null}
                 </div>
-                {onShow ? (
-                  <div>
-                    <div className='book-list__wrap-feedback'>
-                      <div className='book-list__feedback-item'>
-                        <img src={ivanImg} alt='Ivan' />
-                        <div className='book-list__feedback-elem'>
-                          <p className='book-list__feedback-text'>Иван Иванов</p>
-                          <p className='book-list__feedback-text'>5 января 2019</p>
-                        </div>
-                      </div>
-                      <div className='book-list__star-wrap book-list__star-wrap_padding'>
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={starNotPainted} alt='star-1' />
-                      </div>
-                    </div>
-                    <div
-                      className='book-list__wrap-feedback book-list__wrap-feedback_padding
-            '
-                    >
-                      <div className='book-list__feedback-item book-list__feedback-item_padding'>
-                        <img src={ivanImg} alt='Ivan' />
-                        <div className='book-list__feedback-elem'>
-                          <p className='book-list__feedback-text'>Николай Качков</p>
-                          <p className='book-list__feedback-text'>20 июня 2018</p>
-                        </div>
-                      </div>
-                      <div className='book-list__star-wrap book-list__star-wrap_padding'>
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={starNotPainted} alt='star-1' />
-                      </div>
-                    </div>
-                    <p className='book-list__text'>
-                      Учитывая ключевые сценарии поведения, курс на социально-ориентированный национальный проект не
-                      оставляет шанса для анализа существующих паттернов поведения. Для современного мира внедрение
-                      современных методик предоставляет широкие возможности для позиций, занимаемых участниками в
-                      отношении поставленных задач. Как уже неоднократно упомянуто, сделанные на базе интернет-аналитики
-                      выводы будут в равной степени предоставлены сами себе. Вот вам яркий пример современных тенденций
-                      — глубокий уровень погружения создаёт предпосылки для своевременного выполнения сверхзадачи. И нет
-                      сомнений, что акционеры крупнейших компаний, инициированные исключительно синтетически, превращены
-                      в посмешище, хотя само их существование приносит несомненную пользу обществу.
-                    </p>
-                    <div className='book-list__wrap-feedback book-list__wrap-feedback_width'>
-                      <div className='book-list__feedback-item'>
-                        <img src={ivanImg} alt='Ivan' />
-                        <div className='book-list__feedback-elem'>
-                          <p className='book-list__feedback-text'>Екатерина Беляева</p>
-                          <p className='book-list__feedback-text'>18 февраля 2018</p>
-                        </div>
-                      </div>
-                      <div className='book-list__star-wrap book-list__star-wrap_padding'>
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={star} alt='star-1' />
-                        <img src={starNotPainted} alt='star-1' />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
+                {onShow ? books.comments.map((value) => <Comments key={value.id} {...value} />) : null}
                 <button data-test-id='button-rating' type='button' className='book-list__btn book-list__btn_estimation'>
                   оценить книгу
                 </button>
@@ -266,4 +201,4 @@ function BookList() {
   );
 }
 
-export { BookList };
+export { BookItem };

@@ -32,8 +32,8 @@ function SwiperNew({ books }) {
         className='mySwiper2'
       >
         {books.map((value) => (
-          <SwiperSlide key={value.id}>
-            <img src={value.img} alt='card' />
+          <SwiperSlide key={value.url}>
+            <img src={`https://strapi.cleverland.by${value.url}`} alt='card' />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -50,8 +50,8 @@ function SwiperNew({ books }) {
           className={`mySwiper ${books.length === 2 ? 'swiper-wrapper_center' : ''}`}
         >
           {books.map((value) => (
-            <SwiperSlide key={value.id}>
-              <img src={value.img} alt='card' />
+            <SwiperSlide key={value.url}>
+              <img src={`https://strapi.cleverland.by${value.url}`} alt='card' />
             </SwiperSlide>
           ))}
         </Swiper>

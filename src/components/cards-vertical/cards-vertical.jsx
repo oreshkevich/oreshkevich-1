@@ -1,6 +1,5 @@
 import React from 'react';
 
-// import { Card } from '../card';
 import { CardVertical } from '../card-vertical';
 
 import './cards-vertical.scss';

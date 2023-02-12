@@ -15,11 +15,11 @@ import { Spinner } from '../spinner';
 import './main.scss';
 
 function Main() {
-  const [location, setLocation] = useState(false);
+  const [location, setLocation] = useState(true);
   const handleClick = () => {
     setLocation((prevValue) => !prevValue);
   };
-  const [isActive, setActive] = useState(false);
+  const [isActive, setActive] = useState(true);
   const handleToggle = () => {
     setActive(!isActive);
   };
@@ -40,7 +40,6 @@ function Main() {
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
-  //   console.log(stat);
 
   return (
     <div className='main-wrap'>

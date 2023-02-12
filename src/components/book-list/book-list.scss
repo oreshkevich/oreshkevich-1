@@ -291,7 +291,6 @@
   }
   .book-list__item_not-img {
     min-width: 345px;
-    // height: initial;
   }
   .book-list__grid {
     grid-template-columns: 129px 146px 129px 1fr;
@@ -466,9 +465,7 @@
   .book-list__wrap {
     flex-direction: column;
   }
-  //   .book-list__item {
-  //     position: relative;
-  //   }
+
   .book-list__btn {
     width: 100%;
     justify-content: center;

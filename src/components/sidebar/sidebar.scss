@@ -7,14 +7,11 @@
 }
 
 .sidebar__book {
-  //   height: 36px;
   max-width: 236px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-align: center;
-
-  //   border-bottom: 1px solid #e78f0c;
 }
 
 .sidebar__list {
@@ -70,11 +67,7 @@ ul li:nth-last-child(1) {
   display: none;
 }
 @media (max-width: 768px) {
-  //   .sidebar {
-  //     display: none;
-  //   }
   .modal {
-    // position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -109,7 +102,6 @@ ul li:nth-last-child(1) {
   }
   .sidebar_active {
     position: absolute;
-    // top: 91px;
     top: 26px;
     left: -100%;
     width: 65%;
