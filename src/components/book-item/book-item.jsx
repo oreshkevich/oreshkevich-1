@@ -6,7 +6,7 @@ import iconOther from '../../assets/img/icon_Other.png';
 import strokeArrow from '../../assets/svg/icon-more.svg';
 import strokeBtn from '../../assets/svg/icon-response.svg';
 import starNotPainted from '../../assets/svg/star-2.svg';
-import { getSearchId } from '../../features/book/book-slice';
+import { getSearchId } from '../../store/features/book/book-slice';
 import { Comments } from '../comments';
 import { Rating } from '../rating/rating';
 import { Spinner } from '../spinner';

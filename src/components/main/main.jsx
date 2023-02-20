@@ -7,7 +7,7 @@ import buttonIcon from '../../assets/svg/button-icon.svg';
 import buttonWhite from '../../assets/svg/button-white.svg';
 import searchButton from '../../assets/svg/search-button.svg';
 import searchClose from '../../assets/svg/search-close.svg';
-import { getPosts } from '../../features/post/post-slice';
+import { getPosts } from '../../store/features/post/post-slice';
 import { Cards } from '../cards';
 import { CardsVertical } from '../cards-vertical';
 import { Spinner } from '../spinner';

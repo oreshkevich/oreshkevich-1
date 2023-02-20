@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 const initialState = {
   loadingCategories: true,
@@ -12,18 +12,19 @@ const initialState = {
 
 export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
   try {
-    const res = await axios.get('https://strapi.cleverland.by/api/categories');
+    const response = await fetch('https://strapi.cleverland.by/api/categories');
 
-    if (!res.statusText === 'OK') {
-      rejectWithValue(res.data.message);
+    if (response.statusText !== 'OK') {
+      throw new Error('Server Error!');
     }
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    dispatch(setCategories(res.data));
+
+    const data = await response.json();
+
+    return dispatch(setCategories(data));
   } catch (error) {
-    rejectWithValue(error.res.data);
+    return rejectWithValue(error.message);
   }
 });
-
 export const categorySlice = createSlice({
   name: 'categories',
   initialState,

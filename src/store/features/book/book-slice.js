@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 const initialState = {
   loadingBook: true,
@@ -12,18 +12,19 @@ const initialState = {
 
 export const getSearchId = createAsyncThunk('books/getSearchId', async (id, { rejectWithValue, dispatch }) => {
   try {
-    const res = await axios.get(`https://strapi.cleverland.by/api/books/${id}`);
+    const response = await fetch(`https://strapi.cleverland.by/api/books/${id}`);
 
-    if (!res.statusText === 'OK') {
-      rejectWithValue(res.data.message);
+    if (response.statusText !== 'OK') {
+      throw new Error('Server Error!');
     }
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    dispatch(setBooks(res.data));
+
+    const data = await response.json();
+
+    return dispatch(setBooks(data));
   } catch (error) {
-    rejectWithValue(error.res.data);
+    return rejectWithValue(error.message);
   }
 });
-
 export const bookSlice = createSlice({
   name: 'books',
   initialState,

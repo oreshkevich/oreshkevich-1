@@ -4,8 +4,8 @@ import { NavLink, useParams } from 'react-router-dom';
 
 import strokeArrow from '../../assets/svg/stroke.svg';
 import strokeBtn from '../../assets/svg/stroke-btn.svg';
-import { getCategories } from '../../features/category/category-slice';
 import { useWidth } from '../../hook';
+import { getCategories } from '../../store/features/category/category-slice';
 import { SidebarLink } from '../sidebar-link';
 
 import './sidebar.scss';
