@@ -1,7 +1,5 @@
-import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import iconOther from '../../assets/img/icon_Other.png';
 import { Rating } from '../rating/rating';
 import { SelectColor } from '../select-color';
 
@@ -24,20 +22,17 @@ function Card(props) {
 
   const d1 = id + new Date();
 
-  const light = useCallback((str) => <SelectColor key={d1} filter={filter} str={str} />, [filter, d1]);
+  const light = (str) => <SelectColor key={d1} filter={filter} str={str} />;
 
   return (
     <Link to={`/books/${nameCategory}/${id}`} data-test-id='card' className='btn'>
       <div className='card__item ' id={id}>
-        {image ? (
-          <div className='card__element'>
+        <div className={`card__element  ${image ? '' : 'card__element_not-img'}`}>
+          {image ? (
             <img className='card__img' src={`https://strapi.cleverland.by${image.url}`} alt='card-vertical-1' />
-          </div>
-        ) : (
-          <div className='card__element card__element_not-img'>
-            <img className='card__img' src={iconOther} alt='card-vertical-1' />
-          </div>
-        )}
+          ) : null}
+        </div>
+
         {rating ? (
           <div className='card__star-wrap'>
             <Rating rating={rating} />

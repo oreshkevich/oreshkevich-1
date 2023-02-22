@@ -28,6 +28,8 @@ function App() {
     }
   };
 
+  const isActiveColor = posts.length > 0 ? true : false;
+
   const clickHide = () => {
     setOnShow(!onShow);
   };
@@ -63,6 +65,7 @@ function App() {
                   categories={categories}
                   posts={posts}
                   loading={loading}
+                  isActiveColor={isActiveColor}
                 />
               }
             />

@@ -8,7 +8,7 @@ import { useWidth } from '../../hook';
 
 import './book-page.scss';
 
-export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide, categories }) => {
+function BookPage({ onClick, location, clickHideMenu, onShow, clickHide, categories }) {
   const isMobile = !useWidth();
 
   const status = useSelector((state) => state.book.status);
@@ -40,4 +40,6 @@ export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide, 
       )}
     </div>
   );
-};
+}
+
+export { BookPage };

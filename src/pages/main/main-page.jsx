@@ -3,7 +3,7 @@ import { Sidebar } from '../../components/sidebar';
 
 import './main-page.scss';
 
-export const MainPage = ({ onClick, location, clickHide, clickHideMenu, onShow, categories, posts, loading }) => {
+function MainPage({ onClick, location, clickHide, clickHideMenu, onShow, categories, posts, loading, isActiveColor }) {
   const arrDate = [...posts];
   const arrDateSort = arrDate.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
 
@@ -17,10 +17,13 @@ export const MainPage = ({ onClick, location, clickHide, clickHideMenu, onShow, 
           clickHide={clickHide}
           onShow={onShow}
           categories={categories}
+          isActiveColor={isActiveColor}
         />
 
         <Main categories={categories} arrDateSort={arrDateSort} loading={loading} />
       </div>
     </div>
   );
-};
+}
+
+export { MainPage };

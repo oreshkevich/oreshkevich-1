@@ -15,7 +15,7 @@ function Sidebar(props) {
   const dispatch = useDispatch();
   const { posts, loadingBook } = useSelector((state) => state.post);
 
-  const { onClick, location, clickHide, clickHideMenu, onShow, categories } = props;
+  const { onClick, location, clickHide, clickHideMenu, onShow, categories, isActiveColor } = props;
 
   const params = useParams();
 
@@ -65,7 +65,7 @@ function Sidebar(props) {
                     <NavLink
                       to='/books/all'
                       className={({ isActive }) =>
-                        isActive || bookIncludes ? 'sidebar__link active-link' : 'sidebar__link'
+                        isActive || bookIncludes || isActiveColor ? 'sidebar__link active-link' : 'sidebar__link'
                       }
                     >
                       Витрина книг
@@ -85,7 +85,7 @@ function Sidebar(props) {
                       <NavLink
                         onClick={onClick}
                         to='/books/all'
-                        className='sidebar__link-text'
+                        className={`sidebar__link-text ${isActiveColor ? 'active' : ''}`}
                         data-test-id={`${isMobile ? 'navigation-books' : 'burger-books'}`}
                       >
                         Все книги

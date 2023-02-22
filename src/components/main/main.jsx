@@ -133,7 +133,7 @@ function Main(props) {
             onClick={handleToggleRating}
             className={`filter-more__btn ${isActive ? 'hidden' : ''}`}
           >
-            {ratingState ? <img src={ratingClose} alt='icon_action' /> : <img src={ratingOpen} alt='icon_action' />}
+            <img src={ratingState ? ratingClose : ratingOpen} alt='icon_action' />
             <span className='filter-more__title'>По рейтингу</span>
           </button>
         </div>
@@ -144,7 +144,7 @@ function Main(props) {
             className={` ${isActive ? 'hidden' : ''}`}
             onClick={handleClick}
           >
-            {location ? <img src={buttonIcon} alt='icon_action' /> : <img src={buttonIconYellow} alt='icon_action' />}
+            <img src={location ? buttonIcon : buttonIconYellow} alt='icon_action' />
           </button>
           <button
             type='button'
@@ -152,7 +152,7 @@ function Main(props) {
             className={` ${isActive ? 'hidden' : ''}`}
             onClick={handleClick}
           >
-            {location ? <img src={buttonWhite} alt='icon_action' /> : <img src={buttonYellow} alt='icon_action' />}
+            <img src={location ? buttonWhite : buttonYellow} alt='icon_action' />
           </button>
         </div>
       </div>
