@@ -6,26 +6,44 @@ import strokeArrow from '../../assets/svg/stroke.svg';
 import strokeBtn from '../../assets/svg/stroke-btn.svg';
 import { useWidth } from '../../hook';
 import { getCategories } from '../../store/features/category/category-slice';
+import { getPosts } from '../../store/features/post/post-slice';
 import { SidebarLink } from '../sidebar-link';
 
 import './sidebar.scss';
 
 function Sidebar(props) {
-  const dispatch = useDispatch();
-  const categories = useSelector((state) => state.category.categories);
+  //   const dispatch = useDispatch();
+  //   const categories = useSelector((state) => state.category.categories);
+  //   const { posts } = useSelector((state) => state.post);
 
-  const { onClick, location, clickHide, clickHideMenu, onShow } = props;
+  const { onClick, location, clickHide, clickHideMenu, onShow, categories, posts } = props;
 
   const params = useParams();
 
+  const bookCategoryPost = posts.map((a) => a.categories[0]);
+
+  const objReduce = bookCategoryPost.reduce((acc, el) => {
+    acc[el] = (acc[el] || 0) + 1;
+
+    return acc;
+  }, {});
+
+  const result = Object.entries(objReduce).map((entry) => ({
+    quantity: entry[1],
+  }));
+
   const bookCategory = categories.map((a) => a.path);
   const bookAllCategory = [...bookCategory, 'all'];
+
   const bookIncludes = bookAllCategory.includes(params.name);
   const isMobile = useWidth();
 
-  useEffect(() => {
-    dispatch(getCategories());
-  }, [dispatch]);
+  const arrayCategories = categories.map((ele, index) => ({ ...ele, count: result[index] }));
+
+  //   useEffect(() => {
+  //     dispatch(getPosts());
+  //     dispatch(getCategories());
+  //   }, [dispatch]);
 
   return (
     <div className={`modal  ${location ? '' : 'hidden'}`} data-test-id='burger-navigation'>
@@ -70,7 +88,7 @@ function Sidebar(props) {
                     Все книги
                   </NavLink>
                 </li>
-                {categories.map((value) => (
+                {arrayCategories.map((value) => (
                   <SidebarLink key={value.id} {...value} onClick={onClick} />
                 ))}
               </ul>

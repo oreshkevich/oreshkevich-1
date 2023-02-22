@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import buttonIconYellow from '../../assets/svg/button-2.svg';
 import buttonYellow from '../../assets/svg/button-3.svg';
 import buttonIcon from '../../assets/svg/button-icon.svg';
 import buttonWhite from '../../assets/svg/button-white.svg';
+import ratingClose from '../../assets/svg/rating.svg';
+import ratingOpen from '../../assets/svg/rating-open.svg';
 import searchButton from '../../assets/svg/search-button.svg';
 import searchClose from '../../assets/svg/search-close.svg';
+import { getCategories } from '../../store/features/category/category-slice';
 import { getPosts } from '../../store/features/post/post-slice';
 import { Cards } from '../cards';
 import { CardsVertical } from '../cards-vertical';
@@ -14,32 +18,96 @@ import { Spinner } from '../spinner';
 
 import './main.scss';
 
-function Main() {
+function Main(props) {
+  const { categories, arrDateSort, loading } = props;
+
+  //   const arr = [...posts];
+  //   const arrTwo = arr.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
+  const { name } = useParams();
+  //   const dispatch = useDispatch();
+  //   const { posts, loading } = useSelector((state) => state.post);
+
+  //   const categories = useSelector((state) => state.category.categories);
   const [location, setLocation] = useState(true);
+  const [ratingState, setRatingState] = useState(true);
+  const [filter, setValue] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [valuePosts, setValuePosts] = useState(false);
+  const [noBooks, setNoBooks] = useState(true);
+  const [onFocusImg, setOnFocusImg] = useState(true);
+  const [isActive, setActive] = useState(false);
+
   const handleClick = () => {
     setLocation((prevValue) => !prevValue);
   };
-  const [isActive, setActive] = useState(true);
+
   const handleToggle = () => {
     setActive(!isActive);
   };
+  const handleFocus = () => {
+    setOnFocusImg(!onFocusImg);
+  };
 
-  const dispatch = useDispatch();
-  const { posts, loading } = useSelector((state) => state.post);
+  const handleRating = () => {
+    if (ratingState) {
+      const ratingPos = filteredPosts.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
 
-  const bookCategory = posts.map((a) => ({
-    id: a.id,
-    text: a.title,
-    autour: a.authors[0],
-    year: a.issueYear,
-    img: a.image,
-    rating: a.rating,
-    booking: a.booking,
-  }));
+      setFilteredPosts(ratingPos);
+    } else {
+      const ratingPost = filteredPosts.sort((a, b) => (+a.rating < +b.rating ? -1 : 1));
+
+      setFilteredPosts(ratingPost);
+    }
+  };
+
+  const handleToggleRating = () => {
+    setRatingState((prevValue) => !prevValue);
+    handleRating();
+  };
+
+  const handleSearch = (str) => {
+    const filterSearchBooks = filteredPosts.filter((item) => item.title.toLowerCase().includes(str.toLowerCase()));
+
+    setFilteredPosts(filterSearchBooks);
+    if (filterSearchBooks.length === 0) {
+      setNoBooks(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+    if (filter) {
+      handleSearch(filter);
+    }
+    if (e.target.value.trim() === '') {
+      setFilteredPosts(arrDateSort);
+      setNoBooks(true);
+    }
+  };
+
+  //   useEffect(() => {
+  //     dispatch(getPosts());
+  //     dispatch(getCategories());
+  //   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+    if (arrDateSort.length && !valuePosts) {
+      setFilteredPosts(arrDateSort);
+      setValuePosts(true);
+    }
+  }, [arrDateSort, valuePosts]);
+
+  useEffect(() => {
+    if (arrDateSort.length && name) {
+      const categotiesArr = categories.map((item) => ({ [item.path]: item.name }));
+
+      setFilteredPosts(
+        arrDateSort.filter((item) =>
+          name && name !== 'all' ? item.categories[0] === categotiesArr.filter((elem) => elem[name])[0][name] : item
+        )
+      );
+    }
+  }, [name, arrDateSort, categories]);
 
   return (
     <div className='main-wrap'>
@@ -55,9 +123,14 @@ function Main() {
           </button>
           <input
             data-test-id='input-search'
-            className={`input ${isActive ? 'input-hidden' : ''}`}
+            className={`input ${isActive ? 'input-hidden' : ''}  ${onFocusImg ? 'input-grey' : 'input-yellow'}`}
             type='search'
             placeholder='Поиск книги или автора…'
+            id='search-field'
+            onChange={(e) => handleChange(e)}
+            value={filter}
+            onFocus={handleFocus}
+            onBlur={handleFocus}
           />
           <button
             data-test-id='button-search-close'
@@ -67,7 +140,13 @@ function Main() {
           >
             <img src={searchClose} alt='icon_action' />
           </button>
-          <button type='button' className={`filter-more__btn ${isActive ? 'hidden' : ''}`}>
+          <button
+            data-test-id='sort-rating-button'
+            type='button'
+            onClick={handleToggleRating}
+            className={`filter-more__btn ${isActive ? 'hidden' : ''}`}
+          >
+            {ratingState ? <img src={ratingClose} alt='icon_action' /> : <img src={ratingOpen} alt='icon_action' />}
             <span className='filter-more__title'>По&nbsp;рейтингу</span>
           </button>
         </div>
@@ -90,10 +169,15 @@ function Main() {
           </button>
         </div>
       </div>
+
       {location ? (
-        <div className='card__wrap'>{loading ? <Spinner /> : <Cards cards={bookCategory} />}</div>
+        <div className='card__wrap'>
+          {loading ? <Spinner /> : <Cards cards={filteredPosts} noBooks={noBooks} filter={filter} />}
+        </div>
       ) : (
-        <div className='card__wrap-vertical'>{loading ? <Spinner /> : <CardsVertical cards={bookCategory} />}</div>
+        <div className='card__wrap-vertical'>
+          {loading ? <Spinner /> : <CardsVertical cards={filteredPosts} filter={filter} />}
+        </div>
       )}
     </div>
   );

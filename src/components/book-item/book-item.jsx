@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import iconOther from '../../assets/img/icon_Other.png';
 import strokeArrow from '../../assets/svg/icon-more.svg';
@@ -48,9 +48,14 @@ function BookItem() {
         <div>
           <div className='book-list__nav '>
             <div className='container'>
-              <span className='book-list__page'>{name} книги</span>
+              <Link data-test-id='breadcrumbs-link' to={`/books/${name}`} className='btn'>
+                <span className='book-list__page'>{name === 'all' ? 'Все книги' : books.categories[0]}</span>
+              </Link>
+
               <span className='book-list__span'> / </span>
-              <span className='book-list__page '>{books.title}</span>
+              <span data-test-id='book-name' className='book-list__page '>
+                {books.title}
+              </span>
             </div>
           </div>
 
@@ -76,7 +81,9 @@ function BookItem() {
                 )}
               </div>
               <div className='book-list__item'>
-                <h2 className='book-list__title'>{books.title}</h2>
+                <h2 data-test-id='book-title' className='book-list__title'>
+                  {books.title}
+                </h2>
                 <p className='book-list__author'>
                   {books.authors[0]}, {books.issueYear}
                 </p>

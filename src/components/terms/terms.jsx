@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './terms.scss';
 
 function Terms() {

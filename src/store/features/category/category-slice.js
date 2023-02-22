@@ -25,6 +25,7 @@ export const getCategories = createAsyncThunk('categories/getCategories', async 
     return rejectWithValue(error.message);
   }
 });
+
 export const categorySlice = createSlice({
   name: 'categories',
   initialState,

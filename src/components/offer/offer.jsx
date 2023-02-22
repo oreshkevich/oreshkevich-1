@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './offer.scss';
 
 function Offer() {

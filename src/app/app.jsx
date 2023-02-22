@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import { Footer } from '../components/footer';
@@ -11,8 +11,13 @@ import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
 import { TermsOfUse } from '../pages/terms-of-use';
+import { getCategories } from '../store/features/category/category-slice';
+import { getPosts } from '../store/features/post/post-slice';
 
 function App() {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+  const { posts, loading } = useSelector((state) => state.post);
   const [location, setLocation] = useState(false);
   const [onShow, setOnShow] = useState(false);
   const handleClickHide = () => {
@@ -33,6 +38,11 @@ function App() {
   };
   const stat = useSelector((state) => state.post.stat);
 
+  useEffect(() => {
+    dispatch(getPosts());
+    dispatch(getCategories());
+  }, [dispatch]);
+
   return (
     <HashRouter basename='/'>
       <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
@@ -51,18 +61,24 @@ function App() {
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
                   location={location}
+                  categories={categories}
+                  posts={posts}
+                  loading={loading}
                 />
               }
             />
             <Route
               path='/books/:name'
               element={
-                <BookCategory
+                <MainPage
                   onClick={handleClickHide}
-                  location={location}
                   clickHide={clickHide}
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
+                  location={location}
+                  categories={categories}
+                  posts={posts}
+                  loading={loading}
                 />
               }
             />
@@ -75,6 +91,7 @@ function App() {
                   clickHide={clickHide}
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
+                  posts={posts}
                 />
               }
             />
