@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import buttonIconYellow from '../../assets/svg/button-2.svg';
@@ -10,8 +9,6 @@ import ratingClose from '../../assets/svg/rating.svg';
 import ratingOpen from '../../assets/svg/rating-open.svg';
 import searchButton from '../../assets/svg/search-button.svg';
 import searchClose from '../../assets/svg/search-close.svg';
-import { getCategories } from '../../store/features/category/category-slice';
-import { getPosts } from '../../store/features/post/post-slice';
 import { Cards } from '../cards';
 import { CardsVertical } from '../cards-vertical';
 import { Spinner } from '../spinner';
@@ -21,13 +18,8 @@ import './main.scss';
 function Main(props) {
   const { categories, arrDateSort, loading } = props;
 
-  //   const arr = [...posts];
-  //   const arrTwo = arr.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
   const { name } = useParams();
-  //   const dispatch = useDispatch();
-  //   const { posts, loading } = useSelector((state) => state.post);
 
-  //   const categories = useSelector((state) => state.category.categories);
   const [location, setLocation] = useState(true);
   const [ratingState, setRatingState] = useState(true);
   const [filter, setValue] = useState('');
@@ -50,11 +42,11 @@ function Main(props) {
 
   const handleRating = () => {
     if (ratingState) {
-      const ratingPos = filteredPosts.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
+      const ratingPos = filteredPosts.sort((a, b) => (+a.rating < +b.rating ? -1 : 1));
 
       setFilteredPosts(ratingPos);
     } else {
-      const ratingPost = filteredPosts.sort((a, b) => (+a.rating < +b.rating ? -1 : 1));
+      const ratingPost = filteredPosts.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
 
       setFilteredPosts(ratingPost);
     }
@@ -84,11 +76,6 @@ function Main(props) {
       setNoBooks(true);
     }
   };
-
-  //   useEffect(() => {
-  //     dispatch(getPosts());
-  //     dispatch(getCategories());
-  //   }, [dispatch]);
 
   useEffect(() => {
     if (arrDateSort.length && !valuePosts) {
@@ -147,7 +134,7 @@ function Main(props) {
             className={`filter-more__btn ${isActive ? 'hidden' : ''}`}
           >
             {ratingState ? <img src={ratingClose} alt='icon_action' /> : <img src={ratingOpen} alt='icon_action' />}
-            <span className='filter-more__title'>По&nbsp;рейтингу</span>
+            <span className='filter-more__title'>По рейтингу</span>
           </button>
         </div>
         <div className='btn-wrap'>

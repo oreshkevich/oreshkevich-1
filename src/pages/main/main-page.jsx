@@ -17,7 +17,6 @@ export const MainPage = ({ onClick, location, clickHide, clickHideMenu, onShow, 
           clickHide={clickHide}
           onShow={onShow}
           categories={categories}
-          posts={posts}
         />
 
         <Main categories={categories} arrDateSort={arrDateSort} loading={loading} />

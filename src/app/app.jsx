@@ -6,7 +6,6 @@ import { Footer } from '../components/footer';
 import { Header } from '../components/header';
 import { Toast } from '../components/toast';
 import { BookPage } from '../pages/book';
-import { BookCategory } from '../pages/book-category';
 import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
@@ -91,7 +90,7 @@ function App() {
                   clickHide={clickHide}
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
-                  posts={posts}
+                  categories={categories}
                 />
               }
             />

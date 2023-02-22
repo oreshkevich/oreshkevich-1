@@ -8,7 +8,7 @@ import { useWidth } from '../../hook';
 
 import './book-page.scss';
 
-export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide }) => {
+export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide, categories }) => {
   const isMobile = !useWidth();
 
   const status = useSelector((state) => state.book.status);
@@ -22,11 +22,12 @@ export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide }
           clickHideMenu={clickHideMenu}
           onShow={onShow}
           clickHide={clickHide}
+          categories={categories}
         />
       ) : null}
       {status === 'rejected' ? (
         <React.Fragment>
-          <Toast />{' '}
+          <Toast />
           <div className='book-list__nav '>
             <div className='container'>
               <span className='book-list__page'>Бизнес книги</span>
