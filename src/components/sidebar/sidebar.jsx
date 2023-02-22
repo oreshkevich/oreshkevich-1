@@ -15,7 +15,7 @@ function Sidebar(props) {
   const dispatch = useDispatch();
   const { posts, loadingBook } = useSelector((state) => state.post);
 
-  const { onClick, location, clickHide, clickHideMenu, onShow, categories, isActiveColor } = props;
+  const { onClick, location, clickHide, clickHideMenu, onShow, categories, isActiveColor, bookPageSidebar } = props;
 
   const params = useParams();
 
@@ -49,7 +49,10 @@ function Sidebar(props) {
       {loadingBook ? (
         <Spinner />
       ) : (
-        <div className={`modal  ${location ? '' : 'hidden'}`} data-test-id='burger-navigation'>
+        <div
+          className={`modal  ${location ? '' : 'hidden'} ${bookPageSidebar ? 'hidden-sidebar' : ''} `}
+          data-test-id='burger-navigation'
+        >
           <div className='overlay'>
             <div className={`sidebar sidebar_active ${location ? 'vigorous' : ''}`} data-test-id='burger-navigation'>
               <div className='sidebar__wrapper'>

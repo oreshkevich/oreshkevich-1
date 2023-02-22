@@ -4,27 +4,24 @@ import { useSelector } from 'react-redux';
 import { BookItem } from '../../components/book-item';
 import { Sidebar } from '../../components/sidebar';
 import { Toast } from '../../components/toast';
-import { useWidth } from '../../hook';
 
 import './book-page.scss';
 
 function BookPage({ onClick, location, clickHideMenu, onShow, clickHide, categories }) {
-  const isMobile = !useWidth();
-
   const status = useSelector((state) => state.book.status);
+  const bookPageSidebar = true;
 
   return (
     <div className='book-list'>
-      {isMobile ? (
-        <Sidebar
-          onClick={onClick}
-          location={location}
-          clickHideMenu={clickHideMenu}
-          onShow={onShow}
-          clickHide={clickHide}
-          categories={categories}
-        />
-      ) : null}
+      <Sidebar
+        onClick={onClick}
+        location={location}
+        clickHideMenu={clickHideMenu}
+        onShow={onShow}
+        clickHide={clickHide}
+        categories={categories}
+        bookPageSidebar={bookPageSidebar}
+      />
       {status === 'rejected' ? (
         <React.Fragment>
           <Toast />
