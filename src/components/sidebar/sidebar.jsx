@@ -75,11 +75,7 @@ function Sidebar(props) {
                     </NavLink>
 
                     <button type='button' className='sidebar__store' onClick={clickHide}>
-                      {onShow ? (
-                        <img className='sidebar__img' src={strokeBtn} alt='unwrap' />
-                      ) : (
-                        <img className='sidebar__img' src={strokeArrow} alt='unwrap' />
-                      )}
+                      <img className='sidebar__img' src={onShow ? strokeBtn : strokeArrow} alt='unwrap' />
                     </button>
                   </div>
 
