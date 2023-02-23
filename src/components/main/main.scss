@@ -12,14 +12,22 @@
   width: 350px;
   height: 38px;
   padding: 7px 9px 7px 42px;
-  border: 2px solid #ffffff;
+  border: 1px solid #ffffff;
   background: #ffffff;
   box-shadow: 0px 2px 4px rgba(191, 196, 201, 0.2), 0px 3px 4px rgba(191, 196, 201, 0.18),
     0px 1px 5px rgba(191, 196, 201, 0.24);
   border-radius: 599px;
-  background-image: url(../../../src/assets/svg/search.svg);
   background-repeat: no-repeat;
   background-position: top 50% left 17px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  caret-color: rgb(248, 54, 0);
+}
+
+.input-grey {
+  background-image: url(../../../src/assets/svg/search.svg);
+}
+.input-yellow {
+  background-image: url(../../../src/assets/svg/search-yellow.svg);
 }
 
 .input::placeholder {
@@ -36,7 +44,7 @@
   margin-left: 16px;
   position: relative;
   height: 38px;
-  padding: 0 21px 0 36px;
+  padding: 0 21px 0 16px;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
@@ -46,22 +54,29 @@
   box-shadow: 0px 2px 4px rgba(191, 196, 201, 0.2), 0px 3px 4px rgba(191, 196, 201, 0.18),
     0px 1px 5px rgba(191, 196, 201, 0.24);
   border-radius: 599px;
-  z-index: -1;
+  display: flex;
+  text-align: center;
+  align-items: center;
 }
-
-.filter-more__btn::before {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  width: 15px;
-  height: 14px;
-  background-image: url(../../../src/assets/svg/rating.svg);
-  background-position: 50%;
-  background-repeat: no-repeat;
-  background-size: 15px 14px;
-  content: '';
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+.filter-more__btn img {
+  padding-right: 10px;
+}
+// .filter-more__btn::before {
+//   position: absolute;
+//   top: 50%;
+//   left: 12px;
+//   width: 15px;
+//   height: 14px;
+//   background-image: url(../../../src/assets/svg/rating.svg);
+//   background-position: 50%;
+//   background-repeat: no-repeat;
+//   background-size: 15px 14px;
+//   content: '';
+//   -webkit-transform: translateY(-50%);
+//   transform: translateY(-50%);
+// }
+.logo > path {
+  fill: 'white';
 }
 
 .btn-wrap {
@@ -105,6 +120,10 @@
 }
 
 @media (max-width: 468px) {
+  .filter-more__btn img {
+    padding-right: 0px;
+    padding-left: 8px;
+  }
   .search__button {
     display: block;
   }

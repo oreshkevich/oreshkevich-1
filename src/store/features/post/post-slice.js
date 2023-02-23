@@ -1,26 +1,28 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 const initialState = {
   loading: false,
   posts: [],
-  err: null,
+  error: null,
   stat: null,
 };
 
-export const getPosts = createAsyncThunk('posts/getPosts', async (name, { rejectWithValue, dispatch }) => {
+export const getPosts = createAsyncThunk('posts/getPosts', async (_, { rejectWithValue, dispatch }) => {
   try {
-    const res = await axios.get('https://strapi.cleverland.by/api/books');
+    const response = await fetch('https://strapi.cleverland.by/api/books');
 
-    if (!res.statusText === 'OK') {
+    if (response.statusText !== 'OK') {
       throw new Error('Server Error!');
     }
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    dispatch(setPosts(res.data));
-  } catch (err) {
-    rejectWithValue(err.res.data);
+
+    const data = await response.json();
+
+    return dispatch(setPosts(data));
+  } catch (error) {
+    return rejectWithValue(error.message);
   }
 });
 
@@ -44,7 +46,7 @@ export const postSlice = createSlice({
     [getPosts.rejected]: (state, action) => {
       state.stat = 'rejected';
       state.loading = false;
-      state.err = action.payload;
+      state.error = action.payload;
     },
   },
 });

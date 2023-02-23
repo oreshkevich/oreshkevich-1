@@ -4,29 +4,27 @@ import { useSelector } from 'react-redux';
 import { BookItem } from '../../components/book-item';
 import { Sidebar } from '../../components/sidebar';
 import { Toast } from '../../components/toast';
-import { useWidth } from '../../hook';
 
 import './book-page.scss';
 
-export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide }) => {
-  const isMobile = !useWidth();
-
+function BookPage({ onClick, location, clickHideMenu, onShow, clickHide, categories }) {
   const status = useSelector((state) => state.book.status);
+  const bookPageSidebar = true;
 
   return (
     <div className='book-list'>
-      {isMobile ? (
-        <Sidebar
-          onClick={onClick}
-          location={location}
-          clickHideMenu={clickHideMenu}
-          onShow={onShow}
-          clickHide={clickHide}
-        />
-      ) : null}
+      <Sidebar
+        onClick={onClick}
+        location={location}
+        clickHideMenu={clickHideMenu}
+        onShow={onShow}
+        clickHide={clickHide}
+        categories={categories}
+        bookPageSidebar={bookPageSidebar}
+      />
       {status === 'rejected' ? (
         <React.Fragment>
-          <Toast />{' '}
+          <Toast />
           <div className='book-list__nav '>
             <div className='container'>
               <span className='book-list__page'>Бизнес книги</span>
@@ -39,4 +37,6 @@ export const BookPage = ({ onClick, location, clickHideMenu, onShow, clickHide }
       )}
     </div>
   );
-};
+}
+
+export { BookPage };

@@ -1,12 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
 
-import iconOther from '../../assets/img/icon_Other.png';
 import { Rating } from '../rating/rating';
+import { SelectColor } from '../select-color';
 
 import './card.scss';
 
 function Card(props) {
-  const { id, img, text, autour, booking, year, rating } = props;
+  const { id, image, title, authors, booking, issueYear, rating, filter } = props;
+
   let time = '';
   const { name } = useParams();
 
@@ -19,18 +20,19 @@ function Card(props) {
   }
   const nameCategory = name ? name : 'all';
 
+  const d1 = id + new Date();
+
+  const light = (str) => <SelectColor key={d1} filter={filter} str={str} />;
+
   return (
     <Link to={`/books/${nameCategory}/${id}`} data-test-id='card' className='btn'>
       <div className='card__item ' id={id}>
-        {img ? (
-          <div className='card__element'>
-            <img className='card__img' src={`https://strapi.cleverland.by${img.url}`} alt='card-vertical-1' />
-          </div>
-        ) : (
-          <div className='card__element card__element_not-img'>
-            <img className='card__img' src={iconOther} alt='card-vertical-1' />
-          </div>
-        )}
+        <div className={`card__element  ${image ? '' : 'card__element_not-img'}`}>
+          {image ? (
+            <img className='card__img' src={`https://strapi.cleverland.by${image.url}`} alt='card-vertical-1' />
+          ) : null}
+        </div>
+
         {rating ? (
           <div className='card__star-wrap'>
             <Rating rating={rating} />
@@ -39,9 +41,9 @@ function Card(props) {
           <p className='card__estimation'>ещё нет оценок</p>
         )}
         <div className='card__description'>
-          <p className='card__text'>{text}</p>
+          <p className='card__text'>{light(title)}</p>
           <h4 className='card__title'>
-            {autour}, {year}
+            {authors[0]}, {issueYear}
           </h4>
         </div>
         <div className='card__btn btn'>

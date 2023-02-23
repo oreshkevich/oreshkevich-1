@@ -1,5 +1,3 @@
-import React from 'react';
-
 import iconFacebook from '../../assets/svg/icon-facebook.svg';
 import iconInstagram from '../../assets/svg/icon-instagram.svg';
 import iconLinkedin from '../../assets/svg/icon-linkedin.svg';

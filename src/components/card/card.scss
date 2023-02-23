@@ -4,6 +4,9 @@
     0px 1px 5px rgba(191, 196, 201, 0.24);
   border-radius: 10px;
 }
+.card__img {
+  height: 242px;
+}
 .card__estimation {
   padding-top: 15px;
   padding-bottom: 19px;
@@ -46,6 +49,9 @@
 }
 .card__element_not-img {
   border: 1px solid #a7a7a7;
+  background-image: url('../../assets/img/icon_Other.png');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .card__text {
   height: 126px;
@@ -53,7 +59,7 @@
   font-weight: 600;
   font-size: 14px;
   line-height: 18px;
-  display: flex;
+  //   display: flex;
   align-items: center;
   letter-spacing: 0.1px;
   color: #363636;

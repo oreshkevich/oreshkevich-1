@@ -1,18 +1,22 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import { Footer } from '../components/footer';
 import { Header } from '../components/header';
 import { Toast } from '../components/toast';
 import { BookPage } from '../pages/book';
-import { BookCategory } from '../pages/book-category';
 import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
 import { TermsOfUse } from '../pages/terms-of-use';
+import { getCategories } from '../store/features/category/category-slice';
+import { getPosts } from '../store/features/post/post-slice';
 
 function App() {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+  const { posts, loading } = useSelector((state) => state.post);
   const [location, setLocation] = useState(false);
   const [onShow, setOnShow] = useState(false);
   const handleClickHide = () => {
@@ -24,6 +28,8 @@ function App() {
     }
   };
 
+  const isActiveColor = posts.length > 0 ? true : false;
+
   const clickHide = () => {
     setOnShow(!onShow);
   };
@@ -32,6 +38,11 @@ function App() {
     setOnShow(true);
   };
   const stat = useSelector((state) => state.post.stat);
+
+  useEffect(() => {
+    dispatch(getPosts());
+    dispatch(getCategories());
+  }, [dispatch]);
 
   return (
     <HashRouter basename='/'>
@@ -51,18 +62,25 @@ function App() {
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
                   location={location}
+                  categories={categories}
+                  posts={posts}
+                  loading={loading}
+                  isActiveColor={isActiveColor}
                 />
               }
             />
             <Route
               path='/books/:name'
               element={
-                <BookCategory
+                <MainPage
                   onClick={handleClickHide}
-                  location={location}
                   clickHide={clickHide}
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
+                  location={location}
+                  categories={categories}
+                  posts={posts}
+                  loading={loading}
                 />
               }
             />
@@ -75,6 +93,7 @@ function App() {
                   clickHide={clickHide}
                   clickHideMenu={clickHideMenu}
                   onShow={onShow}
+                  categories={categories}
                 />
               }
             />
