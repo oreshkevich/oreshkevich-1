@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, redirect, Route, Routes } from 'react-router-dom';
 
-import { Footer } from '../components/footer';
-import { Header } from '../components/header';
-import { Toast } from '../components/toast';
+import { Auth } from '../pages/auth';
 import { BookPage } from '../pages/book';
+import { ForgotPass } from '../pages/forgot-pass';
 import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
+import { PasswordRecovery } from '../pages/password-recovery';
+import { Registration } from '../pages/registration';
 import { TermsOfUse } from '../pages/terms-of-use';
 import { getCategories } from '../store/features/category/category-slice';
 import { getPosts } from '../store/features/post/post-slice';
@@ -44,89 +45,146 @@ function App() {
     dispatch(getCategories());
   }, [dispatch]);
 
+  const token = localStorage.getItem('token');
+  //   const token = false;
+  const { statusText, error } = useSelector((state) => state.authorization);
+
+  //   const loader = async () => {
+  //     const user = await statusText;
+
+  //     console.log(user);
+  //     if (user) {
+  //       console.log('45');
+
+  //       return <Navigate to='/main' />;
+  //     }
+
+  //     return null;
+  //   };
+
+  //   loader();
+  //   useEffect(() => {
+  //     if (statusText) {
+  //       <Navigate to='/main' />;
+  //       console.log('hi');
+  //     }
+  //   }, [statusText]);
+  console.log(statusText);
+  console.log(error);
+
   return (
     <HashRouter basename='/'>
-      <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
-        <Header onClick={handleClickHide} location={location} />
+      <Routes>
+        <Route path='/auth' element={<Auth />} />
+        <Route path='/' element={token ? <Navigate to='/main' /> : <Navigate to='/auth' />} />
+        <Route path='/registration' element={token ? <Navigate to='/main' /> : <Registration />} />
+        <Route path='/email' element={<ForgotPass />} />
+        <Route path='/forgot-pass' element={<PasswordRecovery />} />
 
-        {stat === 'rejected' && <Toast />}
-
-        <main className='content'>
-          <Routes>
-            <Route
-              path='/'
-              element={
-                <MainPage
-                  onClick={handleClickHide}
-                  clickHide={clickHide}
-                  clickHideMenu={clickHideMenu}
-                  onShow={onShow}
-                  location={location}
-                  categories={categories}
-                  posts={posts}
-                  loading={loading}
-                  isActiveColor={isActiveColor}
-                />
-              }
+        <Route
+          path='/main'
+          element={
+            <MainPage
+              onClick={handleClickHide}
+              clickHide={clickHide}
+              clickHideMenu={clickHideMenu}
+              onShow={onShow}
+              location={location}
+              categories={categories}
+              posts={posts}
+              loading={loading}
+              isActiveColor={isActiveColor}
+              handleClickModal={handleClickModal}
+              stat={stat}
             />
-            <Route
-              path='/books/:name'
-              element={
-                <MainPage
-                  onClick={handleClickHide}
-                  clickHide={clickHide}
-                  clickHideMenu={clickHideMenu}
-                  onShow={onShow}
-                  location={location}
-                  categories={categories}
-                  posts={posts}
-                  loading={loading}
-                />
-              }
-            />
-            <Route
-              path='/books/:name/:id'
-              element={
-                <BookPage
-                  onClick={handleClickHide}
-                  location={location}
-                  clickHide={clickHide}
-                  clickHideMenu={clickHideMenu}
-                  onShow={onShow}
-                  categories={categories}
-                />
-              }
-            />
-            <Route
-              path='/terms'
-              element={
-                <TermsOfUse
-                  onClick={handleClickHide}
-                  location={location}
-                  clickHideMenu={clickHideMenu}
-                  onShow={onShow}
-                  clickHide={clickHide}
-                />
-              }
-            />
-            <Route
-              path='/offer'
-              element={
-                <OfferPage
-                  onClick={handleClickHide}
-                  location={location}
-                  clickHideMenu={clickHideMenu}
-                  onShow={onShow}
-                  clickHide={clickHide}
-                />
-              }
-            />
-            <Route path='*' element={<NotFound onClick={handleClickHide} location={location} />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </div>
+          }
+        />
+        <Route
+          path='/books/:name'
+          element={
+            token ? (
+              <MainPage
+                onClick={handleClickHide}
+                clickHide={clickHide}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                location={location}
+                categories={categories}
+                posts={posts}
+                loading={loading}
+                isActiveColor={isActiveColor}
+                handleClickModal={handleClickModal}
+                stat={stat}
+              />
+            ) : (
+              <Navigate replace={true} to='/auth' />
+            )
+          }
+        />
+        <Route
+          path='/books/:name/:id'
+          element={
+            token ? (
+              <BookPage
+                onClick={handleClickHide}
+                location={location}
+                clickHide={clickHide}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                categories={categories}
+                handleClickModal={handleClickModal}
+                stat={stat}
+              />
+            ) : (
+              <Navigate replace={true} to='/auth' />
+            )
+          }
+        />
+        <Route
+          path='/terms'
+          element={
+            token ? (
+              <TermsOfUse
+                onClick={handleClickHide}
+                location={location}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                clickHide={clickHide}
+                handleClickModal={handleClickModal}
+                stat={stat}
+                categories={categories}
+              />
+            ) : (
+              <Navigate replace={true} to='/auth' />
+            )
+          }
+        />
+        <Route
+          path='/offer'
+          element={
+            token ? (
+              <OfferPage
+                onClick={handleClickHide}
+                location={location}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                clickHide={clickHide}
+                handleClickModal={handleClickModal}
+                stat={stat}
+                categories={categories}
+              />
+            ) : (
+              <Navigate replace={true} to='/auth' />
+            )
+          }
+        />
+        <Route
+          path='*'
+          element={
+            token ? <NotFound onClick={handleClickHide} location={location} /> : <Navigate replace={true} to='/auth' />
+          }
+        />
+      </Routes>
     </HashRouter>
   );
 }

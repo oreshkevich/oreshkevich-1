@@ -9,10 +9,16 @@ const initialState = {
   error: null,
   statusCategories: null,
 };
+const token = localStorage.getItem('token');
 
 export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
   try {
-    const response = await fetch('https://strapi.cleverland.by/api/categories');
+    const response = await fetch('https://strapi.cleverland.by/api/categories', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (response.statusText !== 'OK') {
       throw new Error('Server Error!');

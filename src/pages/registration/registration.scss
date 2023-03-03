@@ -1,0 +1,54 @@
+.custom-text {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: #a7a7a7;
+}
+
+.form-item_relative {
+  position: relative;
+}
+
+.block-form__link_arrow {
+  position: relative;
+  width: 84px;
+}
+.block-form__link_arrow::after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: -30px;
+  top: 3px;
+  width: 18px;
+  height: 12px;
+  background: url(../../assets/svg/arrow-step.svg) center center/cover no-repeat;
+}
+
+.btn-outline-primary {
+  position: absolute;
+  top: 20px;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+}
+.small {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: #a7a7a7;
+}
+.small-errors {
+  color: #f42c4f;
+}
+
+.form-input_errors {
+  border-color: #f42c4f;
+}
+
+button:disabled,
+button[disabled] {
+  background: #ebebeb;
+  color: #ffffff;
+}

@@ -10,9 +10,16 @@ const initialState = {
   status: null,
 };
 
+const token = localStorage.getItem('token');
+
 export const getSearchId = createAsyncThunk('books/getSearchId', async (id, { rejectWithValue, dispatch }) => {
   try {
-    const response = await fetch(`https://strapi.cleverland.by/api/books/${id}`);
+    const response = await fetch(`https://strapi.cleverland.by/api/books/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (response.statusText !== 'OK') {
       throw new Error('Server Error!');
