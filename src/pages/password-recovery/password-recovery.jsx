@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import eye from '../../assets/svg/eye.svg';
 import eyeClose from '../../assets/svg/eye-close.svg';
+import ok from '../../assets/svg/ok.svg';
 import { PasswordError } from '../../components/password-error';
 import { PasswordSucceed } from '../../components/password-succeed';
 import { Spinner } from '../../components/spinner';
+import { ErrorPassword } from '../../function/error-password';
 import { postRecoveryPassword } from '../../store/features/recovery-password/recovery-password-slice';
 
 import './password-recovery.scss';
@@ -20,13 +22,18 @@ function PasswordRecovery() {
   const {
     register,
     handleSubmit,
-
+    watch,
     formState: { errors, isValid },
     reset,
   } = useForm({ validateCriteriaMode: 'all', mode: 'onChange', reValidateMode: 'onBlur' });
   const [locationError, setLocationError] = useState(false);
-  const [passwordType, setPasswordType] = useState('password');
   const [passwordTypeConfirmation, setPasswordTypeConfirmation] = useState('password');
+
+  const watchPassword = watch('password');
+  const [focusPassword, setFocusPassword] = useState(false);
+  const [check, setCheck] = useState(false);
+  const choiceErrorPassword = useCallback(() => <ErrorPassword str={watchPassword} />, [watchPassword]);
+  const [passwordType, setPasswordType] = useState('password');
 
   const togglePassword = () => {
     if (passwordType === 'password') {
@@ -36,6 +43,7 @@ function PasswordRecovery() {
     }
     setPasswordType('password');
   };
+
   const togglePasswordConfirmation = () => {
     if (passwordTypeConfirmation === 'password') {
       setPasswordTypeConfirmation('text');
@@ -45,28 +53,6 @@ function PasswordRecovery() {
     setPasswordTypeConfirmation('password');
   };
 
-  const [passwordBlur, setPasswordBlur] = useState(false);
-
-  register('password', {
-    onBlur: () => {
-      if (errors?.password) setPasswordBlur(true);
-    },
-    onChange: () => {
-      if (errors?.password) setPasswordBlur(false);
-    },
-  });
-
-  const [passwordBlurConfirmation, setPasswordBlurConfirmation] = useState(false);
-
-  register('password', {
-    onBlur: () => {
-      if (errors?.passwordConfirmation) setPasswordBlurConfirmation(true);
-    },
-    onChange: () => {
-      if (errors?.passwordConfirmation) setPasswordBlurConfirmation(false);
-    },
-  });
-
   const [textSuccessful, setTextSuccessful] = useState(false);
 
   const { loading, error, statusText, recoveryPassword } = useSelector((state) => state.recovery);
@@ -74,8 +60,6 @@ function PasswordRecovery() {
   const onSubmit = async (data) => {
     const dataForm = { ...data, code: codeLocation };
 
-    console.log(dataForm);
-    console.log(data);
     dispatch(postRecoveryPassword(dataForm));
     reset();
   };
@@ -95,7 +79,6 @@ function PasswordRecovery() {
       setTextSuccessful(false);
     }
   }, [error, recoveryPassword]);
-  console.log(locationError);
 
   return (
     <div className='wrapper'>
@@ -118,95 +101,58 @@ function PasswordRecovery() {
                         <input
                           type={passwordType}
                           id='password'
+                          placeholder=' '
                           className='form-input'
                           {...register('password', {
-                            required: true,
-                            minLength: 8,
-                            validate: {
-                              capitalLetters: (value) => [/[A-ZА-Я]/].every((pattern) => pattern.test(value)),
-                              number: (value) => [/[0-9]/].every((pattern) => pattern.test(value)),
-                              latinLettersNumbers: (value) =>
-                                [/^[a-zA-Z0-9_]+$/].every((pattern) => pattern.test(value)),
+                            required: 'password is required',
+                            pattern: {
+                              value: /(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/,
+                              message: 'enter valid password',
+                            },
+                            onBlur: () => {
+                              setFocusPassword(true);
+                            },
+                            onChange: (e) => {
+                              setFocusPassword(false);
+                              if (e.target.value.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) !== -1)
+                                setCheck(true);
                             },
                           })}
                         />
+                        {check && <img className='item-form__img' src={ok} alt='icon_action' />}
                         <button type='button' className='btn btn-outline-primary' onClick={togglePassword}>
                           <img src={passwordType === 'password' ? eyeClose : eye} alt='icon_action' />
                         </button>
                         <label className='form-label' htmlFor='password'>
                           Пароль
                         </label>
-                        <p className={`small ${errors?.password && passwordBlur ? 'small-errors' : ''}`}>
-                          Пароль{' '}
-                          <span
-                            className={` ${
-                              errors?.password && errors?.password?.type === 'minLength' ? 'small-errors' : ''
-                            }`}
-                          >
-                            не менее 8 символов{' '}
-                          </span>
-                          с{' '}
-                          <span className={` ${errors?.password?.type === 'capitalLetters' ? 'small-errors' : ''}`}>
-                            заглавной буквой{' '}
-                          </span>
-                          и{' '}
-                          <span className={` ${errors?.password?.type === 'number' ? 'small-errors' : ''}`}>цифры</span>
+
+                        <p className={errors.password && focusPassword ? 'small small-errors' : 'small'}>
+                          {choiceErrorPassword()}
                         </p>
                       </div>
                       <div className='item-form__wrap form-item form-item_relative'>
                         <input
                           type={passwordTypeConfirmation}
                           id='passwordConfirmation'
+                          placeholder=' '
                           className='form-input'
                           {...register('passwordConfirmation', {
-                            required: true,
-                            minLength: 8,
-                            validate: {
-                              capitalLetters: (value) => [/[A-ZА-Я]/].every((pattern) => pattern.test(value)),
-                              number: (value) => [/[0-9]/].every((pattern) => pattern.test(value)),
-                              latinLettersNumbers: (value) =>
-                                [/^[a-zA-Z0-9_]+$/].every((pattern) => pattern.test(value)),
+                            required: 'password is required',
+                            pattern: {
+                              value: /(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/,
+                              message: 'enter valid password',
                             },
                           })}
                         />
                         <button type='button' className='btn btn-outline-primary' onClick={togglePasswordConfirmation}>
-                          <img
-                            src={passwordTypeConfirmation === 'passwordConfirmation' ? eyeClose : eye}
-                            alt='icon_action'
-                          />
+                          <img src={passwordTypeConfirmation === 'password' ? eyeClose : eye} alt='icon_action' />
                         </button>
-                        <label className='form-label' htmlFor='passwordConfirmation'>
+                        <label className='form-label' htmlFor='password'>
                           Пароль
                         </label>
-                        <p
-                          className={`small ${
-                            errors?.passwordConfirmation && passwordBlurConfirmation ? 'small-errors' : ''
-                          }`}
-                        >
-                          Пароль{' '}
-                          <span
-                            className={` ${
-                              errors?.password && errors?.passwordConfirmation?.type === 'minLength'
-                                ? 'small-errors'
-                                : ''
-                            }`}
-                          >
-                            не менее 8 символов{' '}
-                          </span>
-                          с{' '}
-                          <span
-                            className={` ${
-                              errors?.passwordConfirmation?.type === 'capitalLetters' ? 'small-errors' : ''
-                            }`}
-                          >
-                            заглавной буквой{' '}
-                          </span>
-                          и{' '}
-                          <span className={` ${errors?.passwordConfirmation?.type === 'number' ? 'small-errors' : ''}`}>
-                            цифры
-                          </span>
-                        </p>
                       </div>
+
                       <button type='submit' className='item-form__btn '>
                         сохранить изменения
                       </button>

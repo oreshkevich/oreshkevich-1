@@ -33,6 +33,7 @@
   height: 20px;
 }
 .small {
+  padding-left: 12px;
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
@@ -51,4 +52,12 @@ button:disabled,
 button[disabled] {
   background: #ebebeb;
   color: #ffffff;
+}
+
+.item-form__img {
+  position: absolute;
+  top: 20px;
+  right: 41px;
+  width: 24px;
+  height: 24px;
 }

@@ -40,9 +40,6 @@ function Auth() {
   };
 
   const onSubmit = async (data) => {
-    const dataJSON = JSON.stringify(data);
-
-    console.log(dataJSON);
     dispatch(postAuthorization(data));
   };
 
@@ -56,7 +53,6 @@ function Auth() {
       setLocationError(false);
     }
   }, [error]);
-  console.log(locationError);
 
   return (
     <div className='wrapper'>
@@ -75,6 +71,7 @@ function Auth() {
                     <form className='item-form__form' onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
                       <div className='item-form__wrap form-item'>
                         <input
+                          placeholder=' '
                           id='identifier'
                           className={`form-input ${errors?.identifier ? 'form-input_errors' : ''}`}
                           type='text'
@@ -91,6 +88,7 @@ function Auth() {
                       </div>
                       <div className='item-form__wrap form-item'>
                         <input
+                          placeholder=' '
                           type={passwordType}
                           id='password'
                           className={`form-input ${errors?.password ? 'form-input_errors' : ''}`}
@@ -109,14 +107,14 @@ function Auth() {
                         {errors?.password && <p className='small  small-errors'>Поле не должно быть пустым</p>}
                         {textError && <p className='form-error small-errors'>Неверный логин или пароль!</p>}
                       </div>
-                      <Link to='/email'>Забыли логин или пароль?</Link>
+                      <Link to='/email'>{textError ? 'Восстановить?' : 'Забыли логин или пароль?'}</Link>
                       <button type='submit' className='item-form__btn '>
                         вход
                       </button>
                     </form>
                     <div>
                       <span className='block-form__span'> Нет учётной записи?</span>
-                      <Link className='block-form__link' to='/registration'>
+                      <Link className='block-form__link block-form__link_arrow' to='/registration'>
                         Регистрация
                       </Link>
                     </div>

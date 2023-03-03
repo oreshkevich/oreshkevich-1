@@ -20,32 +20,20 @@ function ForgotPass() {
   } = useForm({ validateCriteriaMode: 'all', mode: 'onChange', reValidateMode: 'onBlur' });
   const [locationError, setLocationError] = useState(false);
 
-  const handleClickError = () => {
-    setLocationError((prevValue) => !prevValue);
-  };
-
-  const [textError, setTextError] = useState(false);
-
-  const { loading, error } = useSelector((state) => state.authorization);
+  const { loading, error } = useSelector((state) => state.password);
 
   const onSubmit = async (data) => {
-    const dataJSON = JSON.stringify(data);
-
-    console.log(dataJSON);
     dispatch(postPassword(data));
+    reset();
   };
 
   useEffect(() => {
     if (error === 'Bad Request') {
-      setTextError(true);
-    } else if (error !== 'Bad Request' && error) {
       setLocationError(true);
-      setTextError(false);
     } else {
       setLocationError(false);
     }
   }, [error]);
-  console.log(locationError);
 
   return (
     <div className='wrapper'>
@@ -57,8 +45,14 @@ function ForgotPass() {
               {locationError ? (
                 <SuccessfulResponse />
               ) : (
-                <div className='block-form'>
-                  <h3 className='block-form__title'>Вход в личный кабинет</h3>
+                <div className='block-form block-form_email'>
+                  <div className='block-form__auth'>
+                    <Link className='block-form__auth-link' to='/auth'>
+                      вход в личный кабинет
+                    </Link>
+                  </div>
+
+                  <h3 className='block-form__title'>Восстановление пароля</h3>
 
                   <div className='block-form__item item-form'>
                     <form className='item-form__form' onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
@@ -66,17 +60,25 @@ function ForgotPass() {
                         <input
                           type='email'
                           id='email'
+                          placeholder=' '
                           className='form-input'
-                          required={true}
                           {...register('email', {
                             required: true,
                             minLength: 3,
                             pattern: /^([a-zA-Z][a-zA-Z0-9-_]{2,15})*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/,
                           })}
                         />
+
                         <label className='form-label' htmlFor='email'>
                           E-mail
                         </label>
+                        {errors?.email ? (
+                          <p className='small  small-errors'>Введите корректный e-mail</p>
+                        ) : error ? (
+                          <p className='small  small-errors'>{error}</p>
+                        ) : (
+                          <p className='small'>&nbsp;</p>
+                        )}
 
                         <p className='small  '>
                           На это email будет отправлено письмо с инструкциями по восстановлению пароля
@@ -89,7 +91,7 @@ function ForgotPass() {
                     </form>
                     <div>
                       <span className='block-form__span'> Нет учётной записи?</span>
-                      <Link className='block-form__link' to='/registration'>
+                      <Link className='block-form__link block-form__link_arrow' to='/registration'>
                         Регистрация
                       </Link>
                     </div>

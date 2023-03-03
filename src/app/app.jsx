@@ -45,32 +45,9 @@ function App() {
     dispatch(getCategories());
   }, [dispatch]);
 
-  const token = localStorage.getItem('token');
-  //   const token = false;
+  //   const token = localStorage.getItem('token');
+  const token = false;
   const { statusText, error } = useSelector((state) => state.authorization);
-
-  //   const loader = async () => {
-  //     const user = await statusText;
-
-  //     console.log(user);
-  //     if (user) {
-  //       console.log('45');
-
-  //       return <Navigate to='/main' />;
-  //     }
-
-  //     return null;
-  //   };
-
-  //   loader();
-  //   useEffect(() => {
-  //     if (statusText) {
-  //       <Navigate to='/main' />;
-  //       console.log('hi');
-  //     }
-  //   }, [statusText]);
-  console.log(statusText);
-  console.log(error);
 
   return (
     <HashRouter basename='/'>

@@ -69,6 +69,7 @@
   letter-spacing: 0.2px;
   text-transform: uppercase;
   color: #ffffff;
+  width: 100%;
 }
 .block-form__span {
   font-weight: 400;
@@ -94,6 +95,18 @@
   position: relative;
 }
 
+.form-input:focus-within .form-label,
+.form-input:not(:placeholder-shown) ~ .form-label {
+  top: 3px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: #a7a7a7;
+}
+.form-input {
+  min-width: 416px;
+}
 .form-label {
   position: absolute;
   pointer-events: none;
@@ -109,20 +122,6 @@
   line-height: 18px;
   letter-spacing: 0.1px;
   color: #363636;
-}
-
-.form-input:focus ~ .form-label,
-.form-input:not(:focus):valid ~ .form-label {
-  top: 3px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.2px;
-  color: #a7a7a7;
-}
-
-.form-input {
-  min-width: 416px;
 }
 
 @media (max-width: 558px) {

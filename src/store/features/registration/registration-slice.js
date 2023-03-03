@@ -8,6 +8,7 @@ const initialState = {
   registrations: [],
   error: null,
   stat: null,
+  statusText: null,
 };
 
 export const addNewRegistration = createAsyncThunk(
@@ -22,14 +23,12 @@ export const addNewRegistration = createAsyncThunk(
         body: JSON.stringify(dataForm),
       });
 
-      console.log(response.statusText);
       if (response.statusText !== 'OK') {
-        throw new Error('Server Error!');
+        throw new Error(response.statusText);
       }
 
       const data = await response.json();
 
-      console.log(data.jwt);
       if (data.jwt) localStorage.setItem('token', data.jwt);
 
       return dispatch(setRegistration(data));
@@ -51,15 +50,20 @@ export const registrationSlice = createSlice({
     [addNewRegistration.fulfilled.type]: (state) => {
       state.loading = false;
       state.stat = 'loading';
+      state.error = null;
+      state.statusText = null;
     },
     [addNewRegistration.pending.type]: (state) => {
       state.loading = true;
       state.stat = 'resolved';
+      state.error = null;
+      state.statusText = 'OK';
     },
     [addNewRegistration.rejected]: (state, action) => {
       state.stat = 'rejected';
       state.loading = false;
       state.error = action.payload;
+      state.statusText = null;
     },
   },
 });
