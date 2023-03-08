@@ -1,7 +1,10 @@
+import React, { useEffect } from 'react';
+
 import { Footer } from '../../components/footer';
 import { Header } from '../../components/header';
 import { Main } from '../../components/main';
 import { Sidebar } from '../../components/sidebar';
+import { Spinner } from '../../components/spinner/spinner';
 import { Toast } from '../../components/toast';
 
 import './main-page.scss';
@@ -14,41 +17,57 @@ function MainPage({
   onShow,
   categories,
   posts,
-  loading,
+  isLoadingBook,
+  loadingCategories,
   isActiveColor,
   handleClickHide,
   handleClickModal,
-  stat,
+  isErrorBook,
+  handleMenuToggle,
+  isActiveMenuToggle,
 }) {
   const arrDate = [...posts];
   const arrDateSort = arrDate.sort((a, b) => (+a.rating > +b.rating ? -1 : 1));
 
   return (
-    <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
-      <Header onClick={handleClickHide} location={location} />
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <React.Fragment>
+      {isLoadingBook && loadingCategories ? (
+        <Spinner />
+      ) : (
+        <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
+          <Header onClick={handleClickHide} location={location} handleMenuToggle={handleMenuToggle} />
 
-      {stat === 'rejected' && <Toast />}
+          {isErrorBook && <Toast />}
 
-      <main className='content'>
-        <div className='container '>
-          <div className='grid'>
-            <Sidebar
-              onClick={onClick}
-              location={location}
-              clickHideMenu={clickHideMenu}
-              clickHide={clickHide}
-              onShow={onShow}
-              categories={categories}
-              isActiveColor={isActiveColor}
-            />
+          <main className='content'>
+            <div className='container '>
+              <div className='grid'>
+                <Sidebar
+                  onClick={onClick}
+                  location={location}
+                  clickHideMenu={clickHideMenu}
+                  clickHide={clickHide}
+                  onShow={onShow}
+                  categories={categories}
+                  isActiveColor={isActiveColor}
+                  isActiveMenuToggle={isActiveMenuToggle}
+                />
 
-            <Main categories={categories} arrDateSort={arrDateSort} loading={loading} />
-          </div>
+                <Main
+                  categories={categories}
+                  arrDateSort={arrDateSort}
+                  loadingCategories={loadingCategories}
+                  isLoadingBook={isLoadingBook}
+                />
+              </div>
+            </div>
+          </main>
+
+          <Footer />
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      )}
+    </React.Fragment>
   );
 }
 

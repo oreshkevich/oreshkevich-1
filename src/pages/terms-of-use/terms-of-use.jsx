@@ -13,13 +13,14 @@ function TermsOfUse({
   handleClickHide,
   handleClickModal,
   categories,
-  stat,
+  isErrorBook,
+  handleMenuToggle,
 }) {
   return (
     <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
-      <Header onClick={handleClickHide} location={location} />
+      <Header onClick={handleClickHide} location={location} handleMenuToggle={handleMenuToggle} />
 
-      {stat === 'rejected' && <Toast />}
+      {isErrorBook && <Toast />}
 
       <main className='content'>
         <div className='container '>

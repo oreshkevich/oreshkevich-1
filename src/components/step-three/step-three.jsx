@@ -1,73 +1,54 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { InputMask } from 'primereact/inputmask';
 
 function StepThree(props) {
-  const [inputNumbers, setInputNumbers] = useState('');
+  const [phoneError, setPhoneError] = useState(false);
+  const [phone, setPhone] = useState('');
 
-  const PATTERN = /\D/g;
-
-  const getInputNumbersValue = (value) => value.replace(PATTERN, '');
-
-  const handlePhoneInput = (event) => {
-    const input = event.target;
-    const inputNumbersValue = getInputNumbersValue(input.value);
-    const inputValuePhone = inputNumbersValue.slice(0, 11);
-
-    setInputNumbers(`+${inputValuePhone}`);
-
-    let formattedInputValue = '';
-
-    const firstSymbols = inputNumbersValue[0];
-
-    if (firstSymbols) {
-      formattedInputValue = `${firstSymbols}`;
-
-      if (inputNumbersValue.length > 1) {
-        formattedInputValue += `${inputNumbersValue.substring(1, 3)}`;
-      }
-      if (inputNumbersValue.length > 3) {
-        formattedInputValue += ` (${inputNumbersValue.substring(3, 5)}`;
-      }
-      if (inputNumbersValue.length >= 6) {
-        formattedInputValue += `) ${inputNumbersValue.substring(5, 8)}`;
-      }
-      if (inputNumbersValue.length >= 9) {
-        formattedInputValue += `-${inputNumbersValue.substring(8, 10)}`;
-      }
-      if (inputNumbersValue.length >= 11) {
-        formattedInputValue += `-${inputNumbersValue.substring(10, 12)}`;
-      }
-    }
-
-    input.value = `+${formattedInputValue}`;
-  };
-
-  props.register('phone', {
-    onChange: (e) => {
-      handlePhoneInput(e);
-    },
-  });
+  useEffect(() => {
+    props.setValue('phone', phone);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phone]);
 
   return (
     <div className='step-one'>
       <div className='item-form__wrap form-item'>
-        <input
+        <InputMask
+          mask='+375 (99) 999-99-99'
+          slotChar='x'
+          id='phone'
+          type='tel'
+          autoClear={false}
+          required={true}
           placeholder=' '
           className={`form-input ${props.errors.phone ? 'form-input_errors' : ''}`}
-          type='tel'
           {...props.register('phone', {
-            required: true,
-            minLength: 1,
-            validate: {
-              numberPhone: () =>
-                [/^(\+375|80)(29|25|44|33)(\d{3})(\d{2})(\d{1})$/].every((pattern) => pattern.test(inputNumbers)),
+            required: 'phone is required',
+            onChange: (e) => {
+              const valuePhone = e.target.value;
+              const valuePhoneClean = valuePhone.replace(/\s/g, '').replace(/[-()]/g, '');
+
+              if (valuePhoneClean.search(/^(\+375|80)(29|25|44|33)(\d{3})(\d{2})(\d{2})$/) === -1) {
+                setPhoneError(true);
+              } else {
+                setPhoneError(false);
+                setPhone(e.target.value);
+              }
             },
           })}
-          // onInput={handlePhoneInput}
         />
         <label className='form-label' htmlFor='phone'>
           Номер телефона
         </label>
-        <p className={`small ${props.errors?.phone ? 'small-errors' : ''}`}>В формате +375 (xx) xxx-xx-xx</p>
+        {props.errors.phone?.type === 'required' && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
+        <p data-test-id='hint' className={`small ${phoneError ? 'small-errors' : ''}`}>
+          В формате +375 (xx) xxx-xx-xx
+        </p>
       </div>
       <div className='item-form__wrap form-item form-item_relative'>
         <input
@@ -85,7 +66,16 @@ function StepThree(props) {
         <label className='form-label' htmlFor='email'>
           E-mail
         </label>
-        {props.errors?.email && <p className='small  small-errors'>Введите корректный e-mail</p>}
+        {props.errors.email?.type === 'required' && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
+        {props.errors?.email && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Введите корректный e-mail
+          </p>
+        )}
       </div>
     </div>
   );

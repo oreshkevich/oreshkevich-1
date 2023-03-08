@@ -10,7 +10,8 @@ function ErrorPassword({ str }) {
       return (
         // eslint-disable-next-line react/jsx-filename-extension
         <React.Fragment>
-          Пароль <span className='small-errors'>не менее 8 символов</span>, с заглавной буквой и цифрой
+          Пароль <span className='small-errors'>не менее 8 символов</span>, с <span>заглавной буквой</span> и{' '}
+          <span>цифрой</span>
         </React.Fragment>
       );
     }
@@ -21,7 +22,7 @@ function ErrorPassword({ str }) {
     ) {
       return (
         <React.Fragment>
-          Пароль <span className='small-errors'>не менее 8 символов</span>, с заглавной буквой и{' '}
+          Пароль <span className='small-errors'>не менее 8 символов</span>, с <span>заглавной буквой</span> и{' '}
           <span className='small-errors'>цифрой</span>
         </React.Fragment>
       );

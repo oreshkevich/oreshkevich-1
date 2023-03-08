@@ -2,35 +2,39 @@
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+import { tokenData } from '../authorization/authorization-slice';
 
 const initialState = {
   loadingCategories: true,
   categories: [],
   error: null,
+  isGetCategories: false,
   statusCategories: null,
 };
 const token = localStorage.getItem('token');
 
-export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
-  try {
-    const response = await fetch('https://strapi.cleverland.by/api/categories', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+// export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
+//   try {
+//     const response = await fetch('https://strapi.cleverland.by/api/categories', {
+//       method: 'GET',
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
 
-    if (response.statusText !== 'OK') {
-      throw new Error('Server Error!');
-    }
+//     if (response.statusText !== 'OK') {
+//       throw new Error('Server Error!');
+//     }
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    return dispatch(setCategories(data));
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
+//     return dispatch(setCategories(data));
+//   } catch (error) {
+//     return rejectWithValue(error.message);
+//   }
+// });
 
 export const categorySlice = createSlice({
   name: 'categories',
@@ -38,24 +42,69 @@ export const categorySlice = createSlice({
   reducers: {
     setCategories: (state, action) => {
       state.categories = action.payload;
+      state.isGetCategories = true;
+      state.error = false;
+      state.loadingCategories = false;
+    },
+    setError(state) {
+      state.error = true;
+      state.loadingCategories = false;
     },
   },
-  extraReducers: {
-    [getCategories.fulfilled]: (state) => {
-      state.loadingCategories = false;
-      state.status = 'loading';
-    },
-    [getCategories.pending]: (state) => {
-      state.loadingCategories = true;
-      state.status = 'resolved';
-    },
-    [getCategories.rejected]: (state, action) => {
-      state.status = 'rejected';
-      state.loadingCategories = false;
-      state.error = action.payload;
-    },
-  },
+  //   extraReducers: {
+  //     [getCategories.fulfilled]: (state) => {
+  //       state.loadingCategories = false;
+  //       state.status = 'loading';
+  //     },
+  //     [getCategories.pending]: (state) => {
+  //       state.loadingCategories = true;
+  //       state.status = 'resolved';
+  //     },
+  //     [getCategories.rejected]: (state, action) => {
+  //       state.status = 'rejected';
+  //       state.loadingCategories = false;
+  //       state.error = action.payload;
+  //     },
+  //   },
 });
+export const { setCategories, setError } = categorySlice.actions;
 
-export const { setCategories } = categorySlice.actions;
+// export const categoriesReducer = categorySlice.reducer;
+
+export const getCategories = () => async (dispatch) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token ? localStorage.getItem('token') : tokenData}`,
+    },
+  };
+
+  try {
+    const res = await axios.get('https://strapi.cleverland.by/api/categories', config);
+
+    console.log('====================================');
+    console.log('token', tokenData);
+    console.log('====================================');
+    console.log(res);
+    dispatch(setCategories(res.data));
+    // Work with the response...
+  } catch (err) {
+    if (err.response) {
+      console.log('====================================');
+      console.log(err);
+      console.log('====================================');
+      dispatch(setError(err.data));
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      // Anything else
+    }
+  }
+
+  //   await axios
+  //     .get('https://strapi.cleverland.by/api/categories', config)
+  //     .then((response) => dispatch(setCategories(response.data)))
+  //     .catch((error) => dispatch(setError(error.data)));
+};
+
+// export const { setCategories } = categorySlice.actions;
 export default categorySlice.reducer;

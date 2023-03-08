@@ -18,13 +18,15 @@ function BookPage({
   categories,
   handleClickHide,
   handleClickModal,
+  handleMenuToggle,
+  isActiveMenuToggle,
 }) {
   const status = useSelector((state) => state.book.status);
   const bookPageSidebar = true;
 
   return (
     <div className='wrapper' role='button' tabIndex={0} onKeyDown={handleClickModal} onClick={handleClickModal}>
-      <Header onClick={handleClickHide} location={location} />
+      <Header onClick={handleClickHide} location={location} handleMenuToggle={handleMenuToggle} />
 
       <main className='content'>
         <div className='book-list'>
@@ -36,6 +38,7 @@ function BookPage({
             clickHide={clickHide}
             categories={categories}
             bookPageSidebar={bookPageSidebar}
+            isActiveMenuToggle={isActiveMenuToggle}
           />
           {status === 'rejected' ? (
             <React.Fragment>

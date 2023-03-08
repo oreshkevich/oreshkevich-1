@@ -2,7 +2,7 @@ import './request-post.scss';
 
 function RequestPost() {
   return (
-    <div className='block-form block-form_center'>
+    <div className='block-form block-form_center' data-test-id='status-block'>
       <h3 className='block-form__title'>Данные не сохранились</h3>
       <div className='block-form__item item-form'>
         <p className='block-form__item-text'>

@@ -24,7 +24,7 @@ export const postPassword = createAsyncThunk(
       });
 
       if (response.statusText !== 'OK') {
-        throw new Error(response.statusText);
+        throw new Error('error');
       }
 
       const data = await response.json();

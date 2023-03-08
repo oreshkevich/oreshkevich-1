@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 import strokeArrow from '../../assets/svg/stroke.svg';
 import strokeBtn from '../../assets/svg/stroke-btn.svg';
 import { useWidth } from '../../hook';
+import { getCategories } from '../../store/features/category/category-slice';
 import { getPosts } from '../../store/features/post/post-slice';
 import { SidebarLink } from '../sidebar-link';
 import { Spinner } from '../spinner';
@@ -13,10 +14,27 @@ import './sidebar.scss';
 
 function Sidebar(props) {
   const dispatch = useDispatch();
-  const { posts, loadingBook } = useSelector((state) => state.post);
+  const { posts, isLoadingBook } = useSelector((state) => state.post);
+  const history = useNavigate();
+  const {
+    onClick,
+    location,
+    clickHide,
+    clickHideMenu,
+    onShow,
+    // categories,
+    isActiveColor,
+    bookPageSidebar,
+    isActiveMenuToggle,
+  } = props;
 
-  const { onClick, location, clickHide, clickHideMenu, onShow, categories, isActiveColor, bookPageSidebar } = props;
-
+  const categories = useSelector((state) => state.category.categories);
+  const exit = () => {
+    console.log('hi');
+    localStorage.setItem('token', false);
+    // window.location.assign('./');
+    history('/auth');
+  };
   const params = useParams();
 
   const bookCategoryPost = posts.map((a) => a.categories[0]);
@@ -42,11 +60,14 @@ function Sidebar(props) {
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <React.Fragment>
-      {loadingBook ? (
+      {isLoadingBook ? (
         <Spinner />
       ) : (
         <div
@@ -121,7 +142,7 @@ function Sidebar(props) {
                     </NavLink>
                   </div>
                 </div>
-                <div className='sidebar__profile-wrap'>
+                <div className={`sidebar__profile-wrap ${isActiveMenuToggle ? 'header-profile-hidden  ' : ''} `}>
                   <hr className='sidebar__line' />
                   <div className='sidebar__link-wrap'>
                     <div className='sidebar__rule-link'>
@@ -138,9 +159,11 @@ function Sidebar(props) {
                     </div>
                     <div>
                       <NavLink
-                        onClick={onClick}
-                        to='/exit'
+                        data-test-id='exit-button'
+                        onClick={exit}
+                        to='/auth'
                         className={({ isActive }) => (isActive ? 'sidebar__link active-link' : 'sidebar__link')}
+                        // onClick={() => exit()}
                       >
                         Выход
                       </NavLink>

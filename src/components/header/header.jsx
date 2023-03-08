@@ -5,7 +5,7 @@ import mainLogo from '../../assets/svg/logo.svg';
 
 import './header.scss';
 
-function Header({ onClick, location }) {
+function Header({ onClick, location, handleMenuToggle }) {
   return (
     <header className='header'>
       <div className='container'>
@@ -23,7 +23,13 @@ function Header({ onClick, location }) {
             />
             <h1 className='header__title'>Библиотека</h1>
           </div>
-          <div className='header__item header__item_avatar'>
+          <div
+            className='header__item header__item_avatar'
+            role='button'
+            tabIndex={0}
+            onKeyDown={handleMenuToggle}
+            onClick={handleMenuToggle}
+          >
             <span className='header__span'>Привет, Иван!</span>
             <img className='header__img' src={avatar} alt='avatar' />
           </div>

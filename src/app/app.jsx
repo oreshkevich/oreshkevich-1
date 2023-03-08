@@ -16,8 +16,9 @@ import { getPosts } from '../store/features/post/post-slice';
 
 function App() {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.category);
-  const { posts, loading } = useSelector((state) => state.post);
+  const { categories, loadingCategories } = useSelector((state) => state.category);
+  const { posts, isLoadingBook, isErrorBook } = useSelector((state) => state.post);
+  //  const stat = useSelector((state) => state.post.stat);
   const [location, setLocation] = useState(false);
   const [onShow, setOnShow] = useState(false);
   const handleClickHide = () => {
@@ -27,6 +28,10 @@ function App() {
     if (event.target.classList.contains('hamburger') || event.target.classList.contains('overlay')) {
       setLocation(!location);
     }
+  };
+  const [isActiveMenuToggle, setActiveMenuToggle] = useState(true);
+  const handleMenuToggle = () => {
+    setActiveMenuToggle(!isActiveMenuToggle);
   };
 
   const isActiveColor = posts.length > 0 ? true : false;
@@ -38,46 +43,46 @@ function App() {
   const clickHideMenu = () => {
     setOnShow(true);
   };
-  const stat = useSelector((state) => state.post.stat);
 
   useEffect(() => {
     dispatch(getPosts());
     dispatch(getCategories());
   }, [dispatch]);
 
-  //   const token = localStorage.getItem('token');
-  const token = false;
+  const tokenLocalStorage = localStorage.getItem('token');
+  let token;
+
+  if (tokenLocalStorage === 'false') {
+    token = false;
+  } else {
+    token = tokenLocalStorage;
+  }
+
   const { statusText, error } = useSelector((state) => state.authorization);
 
   return (
     <HashRouter basename='/'>
       <Routes>
-        <Route path='/auth' element={<Auth />} />
-        <Route path='/' element={token ? <Navigate to='/main' /> : <Navigate to='/auth' />} />
-        <Route path='/registration' element={token ? <Navigate to='/main' /> : <Registration />} />
-        <Route path='/email' element={<ForgotPass />} />
-        <Route path='/forgot-pass' element={<PasswordRecovery />} />
+        <Route path='/' element={token ? <Navigate to='/books/all' /> : <Navigate to='/auth' />} />
+        <Route path='/registration' element={token ? <Navigate to='/books/all' /> : <Registration />} />
+        <Route path='/auth' element={token ? <Navigate to='/books/all' /> : <Auth />} />
 
+        {/* <Route path='/forgot-pass' element={<ForgotPass />} />
+        <Route path='/forgot-pass/' element={<PasswordRecovery />} /> */}
         <Route
-          path='/main'
+          path='/forgot-pass'
           element={
-            <MainPage
-              onClick={handleClickHide}
-              clickHide={clickHide}
-              clickHideMenu={clickHideMenu}
-              onShow={onShow}
-              location={location}
-              categories={categories}
-              posts={posts}
-              loading={loading}
-              isActiveColor={isActiveColor}
-              handleClickModal={handleClickModal}
-              stat={stat}
-            />
+            token ? (
+              <Navigate to='/books/all' />
+            ) : window.location.href.includes('?code=') ? (
+              <PasswordRecovery />
+            ) : (
+              <ForgotPass />
+            )
           }
         />
-        <Route
-          path='/books/:name'
+        {/* <Route
+          path='/main'
           element={
             token ? (
               <MainPage
@@ -92,75 +97,92 @@ function App() {
                 isActiveColor={isActiveColor}
                 handleClickModal={handleClickModal}
                 stat={stat}
+                handleMenuToggle={handleMenuToggle}
+                isActiveMenuToggle={isActiveMenuToggle}
               />
             ) : (
               <Navigate replace={true} to='/auth' />
+            )
+          }
+        /> */}
+        <Route path='/books' element={token ? <Navigate to='/books/all' /> : <Navigate to='/auth' />} />
+        <Route
+          path='/books/:name'
+          element={
+            token ? (
+              <MainPage
+                onClick={handleClickHide}
+                clickHide={clickHide}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                location={location}
+                categories={categories}
+                posts={posts}
+                isLoadingBook={isLoadingBook}
+                loadingCategories={loadingCategories}
+                isActiveColor={isActiveColor}
+                handleClickModal={handleClickModal}
+                isErrorBook={isErrorBook}
+                handleMenuToggle={handleMenuToggle}
+                isActiveMenuToggle={isActiveMenuToggle}
+              />
+            ) : (
+              <Navigate to='/auth' />
             )
           }
         />
         <Route
           path='/books/:name/:id'
           element={
-            token ? (
-              <BookPage
-                onClick={handleClickHide}
-                location={location}
-                clickHide={clickHide}
-                clickHideMenu={clickHideMenu}
-                onShow={onShow}
-                categories={categories}
-                handleClickModal={handleClickModal}
-                stat={stat}
-              />
-            ) : (
-              <Navigate replace={true} to='/auth' />
-            )
+            <BookPage
+              onClick={handleClickHide}
+              location={location}
+              clickHide={clickHide}
+              clickHideMenu={clickHideMenu}
+              onShow={onShow}
+              categories={categories}
+              handleClickModal={handleClickModal}
+              isErrorBook={isErrorBook}
+              handleMenuToggle={handleMenuToggle}
+              isActiveMenuToggle={isActiveMenuToggle}
+            />
           }
         />
         <Route
           path='/terms'
           element={
-            token ? (
-              <TermsOfUse
-                onClick={handleClickHide}
-                location={location}
-                clickHideMenu={clickHideMenu}
-                onShow={onShow}
-                clickHide={clickHide}
-                handleClickModal={handleClickModal}
-                stat={stat}
-                categories={categories}
-              />
-            ) : (
-              <Navigate replace={true} to='/auth' />
-            )
+            <TermsOfUse
+              onClick={handleClickHide}
+              location={location}
+              clickHideMenu={clickHideMenu}
+              onShow={onShow}
+              clickHide={clickHide}
+              handleClickModal={handleClickModal}
+              isErrorBook={isErrorBook}
+              categories={categories}
+              handleMenuToggle={handleMenuToggle}
+              isActiveMenuToggle={isActiveMenuToggle}
+            />
           }
         />
         <Route
           path='/offer'
           element={
-            token ? (
-              <OfferPage
-                onClick={handleClickHide}
-                location={location}
-                clickHideMenu={clickHideMenu}
-                onShow={onShow}
-                clickHide={clickHide}
-                handleClickModal={handleClickModal}
-                stat={stat}
-                categories={categories}
-              />
-            ) : (
-              <Navigate replace={true} to='/auth' />
-            )
+            <OfferPage
+              onClick={handleClickHide}
+              location={location}
+              clickHideMenu={clickHideMenu}
+              onShow={onShow}
+              clickHide={clickHide}
+              handleClickModal={handleClickModal}
+              isErrorBook={isErrorBook}
+              categories={categories}
+              handleMenuToggle={handleMenuToggle}
+              isActiveMenuToggle={isActiveMenuToggle}
+            />
           }
         />
-        <Route
-          path='*'
-          element={
-            token ? <NotFound onClick={handleClickHide} location={location} /> : <Navigate replace={true} to='/auth' />
-          }
-        />
+        <Route path='*' element={<NotFound onClick={handleClickHide} location={location} />} />
       </Routes>
     </HashRouter>
   );

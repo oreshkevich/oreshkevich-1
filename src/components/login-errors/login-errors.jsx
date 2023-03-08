@@ -4,7 +4,8 @@ import './login-errors.scss';
 
 function LoginErrors({ handleClickError }) {
   return (
-    <div className='block-form block-form_center'>
+    // <div className='block-form block-form_center' data-test-id='status-block'>
+    <div data-test-id='status-block'>
       <h3 className='block-form__title'>Вход не выполнен</h3>
       <div className='block-form__item item-form'>
         <p className='block-form__item-text'>Что-то пошло не так. Попробуйте ещё раз</p>
@@ -16,6 +17,7 @@ function LoginErrors({ handleClickError }) {
         </Link> */}
       </div>
     </div>
+    // </div>
   );
 }
 

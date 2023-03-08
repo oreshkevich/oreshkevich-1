@@ -54,6 +54,7 @@
   background: #f9f9fa;
   padding: 12px 12px;
   height: 56px;
+  outline: none;
 }
 
 .item-form__btn {
@@ -95,15 +96,6 @@
   position: relative;
 }
 
-.form-input:focus-within .form-label,
-.form-input:not(:placeholder-shown) ~ .form-label {
-  top: 3px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.2px;
-  color: #a7a7a7;
-}
 .form-input {
   min-width: 416px;
 }
@@ -122,6 +114,15 @@
   line-height: 18px;
   letter-spacing: 0.1px;
   color: #363636;
+}
+
+.input__eye::after {
+  content: url('../../assets/svg/eye-close.svg');
+}
+.input__eye_open {
+  &::after {
+    content: url('../../assets/svg/eye.svg');
+  }
 }
 
 @media (max-width: 558px) {

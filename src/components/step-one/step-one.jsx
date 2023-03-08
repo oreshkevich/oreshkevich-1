@@ -1,14 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import eye from '../../assets/svg/eye.svg';
 import eyeClose from '../../assets/svg/eye-close.svg';
 import ok from '../../assets/svg/ok.svg';
+import { ErrorLogin } from '../../function/error-login';
 import { ErrorPassword } from '../../function/error-password';
 
 function StepOne(props) {
   const [focusPassword, setFocusPassword] = useState(false);
+  const [focusLogin, setFocusLogin] = useState(false);
   const [check, setCheck] = useState(false);
   const choiceErrorPassword = useCallback(() => <ErrorPassword str={props.watchPassword} />, [props.watchPassword]);
+  const choiceErrorUserName = useCallback(() => <ErrorLogin str={props.watchUserName} />, [props.watchUserName]);
   const [passwordType, setPasswordType] = useState('password');
 
   const togglePassword = () => {
@@ -24,27 +27,35 @@ function StepOne(props) {
     <div className='step-one'>
       <div className='item-form__wrap form-item'>
         <input
-          id='identifier'
+          id='username'
           placeholder=' '
           className={`form-input ${props.errors.username ? 'form-input_errors' : ''}`}
           type='text'
           {...props.register('username', {
             required: true,
             validate: {
-              latinLetters: (value) => [/[A-Za-z]/].every((pattern) => pattern.test(value)),
-              numbers: (value) => [/[0-9]/].every((pattern) => pattern.test(value)),
+              latinLetters: (value) => [/^[a-zA-Z0-9]+$/].every((pattern) => pattern.test(value)),
+            },
+
+            onBlur: () => {
+              setFocusLogin(true);
+            },
+            onChange: () => {
+              setFocusLogin(false);
             },
           })}
         />
-        <label className='form-label' htmlFor='identifier'>
+        <label className='form-label ' htmlFor='username'>
           Придумайте логин для входа
         </label>
-        <p className='small '>
-          Используйте для логина{' '}
-          <span className={` ${props.errors?.username?.type === 'latinLetters' ? 'small-errors' : ''}`}>
-            латинский алфавит{' '}
-          </span>
-          и <span className={` ${props.errors?.username?.type === 'numbers' ? 'small-errors' : ''}`}>цифры</span>
+        {props.errors.username?.type === 'required' && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
+
+        <p data-test-id='hint' className={props.errors.username && focusLogin ? 'small small-errors' : 'small'}>
+          {choiceErrorUserName()}
         </p>
       </div>
       <div className='item-form__wrap form-item form-item_relative'>
@@ -68,15 +79,23 @@ function StepOne(props) {
             },
           })}
         />
-        {check && <img className='item-form__img' src={ok} alt='icon_action' />}
+        {check && <img data-test-id='checkmark' className='item-form__img' src={ok} alt='icon_action' />}
         <button type='button' className='btn btn-outline-primary' onClick={togglePassword}>
-          <img src={passwordType === 'password' ? eyeClose : eye} alt='icon_action' />
+          <img
+            data-test-id={passwordType === 'password' ? 'eye-closed' : 'eye-opened'}
+            src={passwordType === 'password' ? eyeClose : eye}
+            alt='icon_action'
+          />
         </button>
         <label className='form-label' htmlFor='password'>
           Пароль
         </label>
-
-        <p className={props.errors.password && focusPassword ? 'small small-errors' : 'small'}>
+        {props.errors.password?.type === 'required' && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
+        <p data-test-id='hint' className={props.errors.password && focusPassword ? 'small small-errors' : 'small'}>
           {choiceErrorPassword()}
         </p>
       </div>

@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
-
 function StepTwo(props) {
   return (
     <div className='step-one'>
@@ -17,7 +15,11 @@ function StepTwo(props) {
         <label className='form-label' htmlFor='firstName'>
           Имя
         </label>
-        {props.errors?.firstName && <p className='small  small-errors'>Поле не должно быть пустым</p>}
+        {props.errors?.firstName && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
       </div>
       <div className='item-form__wrap form-item form-item_relative'>
         <input
@@ -34,7 +36,11 @@ function StepTwo(props) {
         <label className='form-label' htmlFor='lastName'>
           Фамилия
         </label>
-        {props.errors?.lastName && <p className='small  small-errors'>Поле не должно быть пустым</p>}
+        {props.errors?.lastName && (
+          <p data-test-id='hint' className='small  small-errors'>
+            Поле не может быть пустым
+          </p>
+        )}
       </div>
     </div>
   );

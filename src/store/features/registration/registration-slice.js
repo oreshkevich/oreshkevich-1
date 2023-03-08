@@ -29,7 +29,7 @@ export const addNewRegistration = createAsyncThunk(
 
       const data = await response.json();
 
-      if (data.jwt) localStorage.setItem('token', data.jwt);
+      //   if (data.jwt) localStorage.setItem('token', data.jwt);
 
       return dispatch(setRegistration(data));
     } catch (error) {
@@ -44,6 +44,7 @@ export const registrationSlice = createSlice({
   reducers: {
     setRegistration: (state, action) => {
       state.registrations = action.payload;
+      localStorage.setItem('token', action.payload.jwt);
     },
   },
   extraReducers: {

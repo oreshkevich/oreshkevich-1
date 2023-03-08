@@ -29,7 +29,7 @@ export const postRecoveryPassword = createAsyncThunk(
 
       const data = await response.json();
 
-      if (data.jwt) localStorage.setItem('token', data.jwt);
+      //   if (data.jwt) localStorage.setItem('token', data.jwt);
 
       return dispatch(setRecoveryPassword(data));
     } catch (error) {
@@ -44,6 +44,7 @@ export const recoveryPasswordSlice = createSlice({
   reducers: {
     setRecoveryPassword: (state, action) => {
       state.recoveryPassword = action.payload;
+      localStorage.setItem('token', action.payload.jwt);
     },
   },
   extraReducers: {

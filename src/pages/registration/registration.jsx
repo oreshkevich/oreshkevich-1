@@ -22,22 +22,25 @@ function Registration() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    setValue,
+    formState: { errors },
     reset,
-  } = useForm({ validateCriteriaMode: 'all', mode: 'all', reValidateMode: 'onBlur' });
+  } = useForm({ mode: 'all' });
 
-  const { loading, error, stat, statusText } = useSelector((state) => state.registration);
+  const { loading, error, stat } = useSelector((state) => state.registration);
 
   const [currentStep, setCurrentStep] = useState(1);
 
   const onSubmit = (data) => {
     setCurrentStep((prev) => prev + 1);
+
     if (currentStep === 3) {
       dispatch(addNewRegistration(data));
       reset();
     }
   };
   const [locationError, setLocationError] = useState(false);
+
   const handleClickError = () => {
     setLocationError((prevValue) => !prevValue);
   };
@@ -50,6 +53,7 @@ function Registration() {
       setLocationError(false);
     }
   }, [error]);
+  const watchUserName = watch('username');
   const watchPassword = watch('password');
 
   return (
@@ -59,48 +63,63 @@ function Registration() {
           <div className='container '>
             <div className='auth__item'>
               <h2 className='auth__title'>Cleverland</h2>
-              {locationError ? (
-                <RequestErrors handleClickError={handleClickError} />
-              ) : error && error !== 'Bad Request' ? (
-                <RequestPost />
-              ) : stat === 'loading' ? (
-                <RegistrationSuccessful />
-              ) : (
-                <div className='block-form'>
-                  <h3 className='block-form__title'>Регистрация</h3>
-                  <div className='block-form__item'>
-                    <div className='block-form__text'>{currentStep} шаг из 3</div>
-                  </div>
 
-                  <div className='block-form__item item-form'>
-                    <form className='item-form__form' onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
-                      {currentStep === 1 ? (
-                        <StepOne errors={errors} register={register} watchPassword={watchPassword} />
-                      ) : null}
-                      {currentStep === 2 ? <StepTwo errors={errors} register={register} /> : null}
-                      {currentStep === 3 ? <StepThree errors={errors} register={register} /> : null}
+              <div className='block-form' data-test-id='auth'>
+                {locationError ? (
+                  <RequestErrors handleClickError={handleClickError} />
+                ) : error && error !== 'Bad Request' ? (
+                  <RequestPost />
+                ) : stat === 'loading' ? (
+                  <RegistrationSuccessful />
+                ) : (
+                  <div>
+                    <h3 className='block-form__title'>Регистрация</h3>
+                    <div className='block-form__item'>
+                      <div className='block-form__text'>{currentStep} шаг из 3</div>
+                    </div>
 
-                      <button
-                        className='item-form__btn'
-                        name='disable_button'
-                        type='submit'
-                        disabled={Object.keys(errors).length === 0 ? false : true}
+                    <div className='block-form__item item-form'>
+                      <form
+                        data-test-id='register-form'
+                        className='item-form__form'
+                        onSubmit={handleSubmit(onSubmit)}
+                        autoComplete='off'
                       >
-                        {currentStep === 1 && 'следующий шаг'}
-                        {currentStep === 2 && 'последний шаг'}
-                        {currentStep === 3 && 'зарегистрироваться'}
-                      </button>
-                    </form>
+                        {currentStep === 1 ? (
+                          <StepOne
+                            errors={errors}
+                            register={register}
+                            watchPassword={watchPassword}
+                            watchUserName={watchUserName}
+                          />
+                        ) : null}
+                        {currentStep === 2 ? <StepTwo errors={errors} register={register} /> : null}
+                        {currentStep === 3 ? (
+                          <StepThree errors={errors} register={register} setValue={setValue} />
+                        ) : null}
 
-                    <div className='block-form__elem'>
-                      <span className='block-form__span'> Есть учётная запись?</span>
-                      <Link className='block-form__link block-form__link_arrow' to='/auth'>
-                        войти
-                      </Link>
+                        <button
+                          className='item-form__btn'
+                          name='disable_button'
+                          type='submit'
+                          disabled={Object.keys(errors).length === 0 ? false : true}
+                        >
+                          {currentStep === 1 && 'следующий шаг'}
+                          {currentStep === 2 && 'последний шаг'}
+                          {currentStep === 3 && 'зарегистрироваться'}
+                        </button>
+                      </form>
+
+                      <div className='block-form__elem'>
+                        <span className='block-form__span'> Есть учётная запись?</span>
+                        <Link className='block-form__link block-form__link_arrow' to='/auth'>
+                          войти
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </main>

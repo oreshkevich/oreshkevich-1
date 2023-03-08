@@ -4,7 +4,8 @@ import './registration-successful.scss';
 
 function RegistrationSuccessful() {
   return (
-    <div className='block-form block-form_center'>
+    // <div className='block-form block-form_center'>
+    <div data-test-id='status-block'>
       <h3 className='block-form__title'>Регистрация успешна</h3>
       <div className='block-form__item item-form'>
         <p className='block-form__item-text'>
@@ -15,6 +16,7 @@ function RegistrationSuccessful() {
         </Link>
       </div>
     </div>
+    // </div>
   );
 }
 

@@ -11,6 +11,9 @@ const initialState = {
   statusText: null,
 };
 
+// eslint-disable-next-line import/no-mutable-exports
+export let tokenData;
+
 export const postAuthorization = createAsyncThunk(
   'authorizations/postAuthorization',
   async (dataForm, { rejectWithValue, dispatch }) => {
@@ -29,7 +32,8 @@ export const postAuthorization = createAsyncThunk(
 
       const data = await response.json();
 
-      if (data.jwt) localStorage.setItem('token', data.jwt);
+      //   localStorage.setItem('token', data.jwt);
+      tokenData = data.jwt;
 
       return dispatch(setAuthorization(data));
     } catch (error) {
@@ -44,6 +48,7 @@ export const authorizationSlice = createSlice({
   reducers: {
     setAuthorization: (state, action) => {
       state.authorizations = action.payload;
+      localStorage.setItem('token', action.payload.jwt);
     },
   },
   extraReducers: {
