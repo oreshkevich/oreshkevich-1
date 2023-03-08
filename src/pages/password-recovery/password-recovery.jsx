@@ -23,20 +23,20 @@ function PasswordRecovery() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = useForm({ mode: 'all' });
   const [locationError, setLocationError] = useState(false);
   const [passwordTypeConfirmation, setPasswordTypeConfirmation] = useState('password');
 
   const watchPassword = watch('password');
+
   const [focusPassword, setFocusPassword] = useState(false);
-  const [focusPasswordConfirmation, setFocusPasswordConfirmation] = useState(false);
+
   const [check, setCheck] = useState(false);
   const choiceErrorPassword = useCallback(() => <ErrorPassword str={watchPassword} />, [watchPassword]);
   const [passwordType, setPasswordType] = useState('password');
   const [equal, setEqual] = useState(true);
-  const [disabledBtn, setDisabledBtn] = useState(false);
   const togglePassword = () => {
     if (passwordType === 'password') {
       setPasswordType('text');
@@ -57,7 +57,7 @@ function PasswordRecovery() {
 
   const [textSuccessful, setTextSuccessful] = useState(false);
 
-  const { loading, error, stat, recoveryPassword } = useSelector((state) => state.recovery);
+  const { loading, error, recoveryPassword } = useSelector((state) => state.recovery);
 
   const onSubmit = async (data) => {
     const dataForm = { ...data, code: codeLocation };
@@ -81,18 +81,10 @@ function PasswordRecovery() {
       setTextSuccessful(true);
     }
   }, [error, recoveryPassword]);
-  useEffect(() => {
-    if (equal) {
-      setDisabledBtn(false);
-    } else {
-      setDisabledBtn(true);
-    }
-  }, [equal]);
 
-  console.log(recoveryPassword);
-  console.log(errors);
-  console.log(equal);
-  console.log(Object.keys(recoveryPassword).length !== 0);
+  const handleInput = () => {
+    setEqual(true);
+  };
 
   return (
     <div className='wrapper'>
@@ -101,7 +93,6 @@ function PasswordRecovery() {
           <div className='container '>
             <div className='auth__item'>
               <h2 className='auth__title'>Cleverland</h2>
-
               <div className='block-form' data-test-id='auth'>
                 {locationError ? (
                   <PasswordError handleClickError={handleClickError} />
@@ -170,13 +161,12 @@ function PasswordRecovery() {
                             type={passwordTypeConfirmation}
                             id='passwordConfirmation'
                             placeholder=' '
+                            onFocus={handleInput}
                             className={`form-input ${equal ? '' : 'form-input_errors'}`}
                             {...register('passwordConfirmation', {
                               required: true,
-                              onBlur: () => {
-                                setFocusPasswordConfirmation(true);
-                              },
-                              onChange: (e) => {
+
+                              onBlur: (e) => {
                                 if (e.target.value === watchPassword) {
                                   setEqual(true);
                                 } else {
