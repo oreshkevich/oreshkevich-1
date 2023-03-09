@@ -55,7 +55,7 @@ function StepThree(props) {
           type='email'
           id='email'
           placeholder=' '
-          className='form-input'
+          className={`form-input ${props.errors.email ? 'form-input_errors' : ''}`}
           {...props.register('email', {
             required: true,
             minLength: 3,

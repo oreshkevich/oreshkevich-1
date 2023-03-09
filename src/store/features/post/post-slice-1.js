@@ -32,18 +32,6 @@ export const getPosts = createAsyncThunk('posts/getPosts', async (_, { rejectWit
     return rejectWithValue(error.message);
   }
 });
-// export const getPosts = () => async (dispatch) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${localStorage.getItem('token')}`,
-//     },
-//   };
-
-//   await axios
-//     .get('https://strapi.cleverland.by/api/books', config)
-//     .then((response) => dispatch(setPosts(response.data)));
-//   // .catch((error) => dispatch(setError(error.data)));
-// };
 
 export const postSlice = createSlice({
   name: 'posts',

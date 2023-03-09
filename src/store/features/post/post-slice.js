@@ -11,8 +11,6 @@ const initialState = {
   loading: true,
   posts: [],
   isErrorBook: false,
-  stat: null,
-  isError: null,
   isLoadingBook: true,
 };
 
@@ -49,54 +47,57 @@ export const postSlice = createSlice({
     },
     setError(state) {
       state.isErrorBook = true;
+      state.isLoadingBook = false;
+    },
+    showLoading(state) {
       state.isLoadingBook = true;
     },
-    // loaderBookTrue(state) {
-    //   state.isLoadingBook = true;
-    //   state.isErrorBook = false;
-    // },
+    hiddenLoading(state) {
+      state.isLoadingBook = false;
+    },
   },
-  //   extraReducers: {
-  //     [getPosts.fulfilled.type]: (state) => {
-  //       state.loading = false;
-  //       state.stat = 'loading';
-  //     },
-  //     [getPosts.pending.type]: (state) => {
-  //       state.loading = true;
-  //       state.stat = 'resolved';
-  //     },
-  //     [getPosts.rejected]: (state, action) => {
-  //       state.stat = 'rejected';
-  //       state.loading = false;
-  //       state.error = action.payload;
-  //     },
-  //   },
 });
 
-// export const { setBooks, setBook, loaderBookTrue, loaderBook, setError, setBookError, reverseBooks, ascendingBooks } =
-//   postSlice.actions;
-export const { setPosts, setError } = postSlice.actions;
+export const { setPosts, setError, showLoading, hiddenLoading } = postSlice.actions;
 export const booksReducer = postSlice.reducer;
 
-export const getPosts = () => async (dispatch) => {
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Bearer ${token ? localStorage.getItem('token') : tokenData}`,
-  //     },
-  //   };
+// export const getPosts = () => async (dispatch) => {
+//   dispatch(showLoading());
+//   const config = {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   };
 
+//   //   try {
+//   //     const resp = await httpService.get('/books');
+
+//   //     dispatch(setPosts(resp.data));
+//   //   } catch (err) {
+//   //     dispatch(setError(err.data));
+//   //   }
+
+//   await axios
+//     .get('https://strapi.cleverland.by/api/books', config)
+//     .then((response) => dispatch(setPosts(response.data)))
+//     .catch((error) => dispatch(setError(error.data)));
+// };
+
+export const getPosts = () => async (dispatch) => {
+  dispatch(showLoading());
   try {
-    const resp = await httpService.get('/books');
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const resp = await axios.get('https://strapi.cleverland.by/api/books', config);
 
     dispatch(setPosts(resp.data));
-  } catch (err) {
-    dispatch(setError(err.data));
+  } catch (error) {
+    dispatch(setError(error.data));
   }
-
-  //   await axios
-  //     .get('https://strapi.cleverland.by/api/books', config)
-  //     .then((response) => dispatch(setPosts(response.data)))
-  //     .catch((error) => dispatch(setError(error.data)));
+  dispatch(hiddenLoading());
 };
 
 export default postSlice.reducer;
