@@ -55,14 +55,10 @@ function PasswordRecovery() {
     setPasswordTypeConfirmation('password');
   };
 
-  const [textSuccessful, setTextSuccessful] = useState(false);
-
-  const { loading, error, recoveryPassword } = useSelector((state) => state.recovery);
+  const { loading, error, success } = useSelector((state) => state.recovery);
 
   const onSubmit = async (data) => {
-    const dataForm = { ...data, code: codeLocation };
-
-    dispatch(postRecoveryPassword(dataForm));
+    dispatch(postRecoveryPassword(data, codeLocation));
     reset();
   };
   const handleClickError = () => {
@@ -75,12 +71,7 @@ function PasswordRecovery() {
     } else {
       setLocationError(false);
     }
-    if (Object.keys(recoveryPassword).length === 0) {
-      setTextSuccessful(false);
-    } else {
-      setTextSuccessful(true);
-    }
-  }, [error, recoveryPassword]);
+  }, [error]);
 
   const handleInput = () => {
     setEqual(true);
@@ -96,7 +87,7 @@ function PasswordRecovery() {
               <div className='block-form' data-test-id='auth'>
                 {locationError ? (
                   <PasswordError handleClickError={handleClickError} />
-                ) : textSuccessful ? (
+                ) : success ? (
                   <PasswordSucceed />
                 ) : (
                   <div>

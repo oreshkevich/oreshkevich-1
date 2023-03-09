@@ -1,42 +1,15 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
   loading: false,
   registrations: [],
-  error: null,
-  stat: null,
-  statusText: null,
+  error: false,
+  errorStatus: false,
+  success: false,
 };
-
-export const addNewRegistration = createAsyncThunk(
-  'registrations/addNewRegistration',
-  async (dataForm, { rejectWithValue, dispatch }) => {
-    try {
-      const response = await fetch('https://strapi.cleverland.by/api/auth/local/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataForm),
-      });
-
-      if (response.statusText !== 'OK') {
-        throw new Error(response.statusText);
-      }
-
-      const data = await response.json();
-
-      //   if (data.jwt) localStorage.setItem('token', data.jwt);
-
-      return dispatch(setRegistration(data));
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 export const registrationSlice = createSlice({
   name: 'registrations',
@@ -44,30 +17,51 @@ export const registrationSlice = createSlice({
   reducers: {
     setRegistration: (state, action) => {
       state.registrations = action.payload;
-      localStorage.setItem('token', action.payload.jwt);
-    },
-  },
-  extraReducers: {
-    [addNewRegistration.fulfilled.type]: (state) => {
+      state.error = false;
+      state.errorStatus = false;
+      state.success = true;
       state.loading = false;
-      state.stat = 'loading';
-      state.error = null;
-      state.statusText = null;
     },
-    [addNewRegistration.pending.type]: (state) => {
+
+    setRegistrationError(state, actions) {
+      state.error = actions.payload.error;
+      state.loading = false;
+      state.success = false;
+    },
+    setError(state) {
+      state.errorStatus = 'error';
+      state.loading = false;
+      state.success = false;
+    },
+    showLoading(state) {
       state.loading = true;
-      state.stat = 'resolved';
-      state.error = null;
-      state.statusText = 'OK';
     },
-    [addNewRegistration.rejected]: (state, action) => {
-      state.stat = 'rejected';
+    hiddenLoading(state) {
       state.loading = false;
-      state.error = action.payload;
-      state.statusText = null;
     },
   },
 });
+export const { setRegistration, setRegistrationError, setError, showLoading, hiddenLoading } =
+  registrationSlice.actions;
 
-export const { setRegistration } = registrationSlice.actions;
+export const addNewRegistration = (data) => async (dispatch) => {
+  dispatch(showLoading());
+
+  try {
+    await axios.post('https://strapi.cleverland.by/api/auth/local/register', {
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+    });
+    dispatch(setRegistration());
+  } catch (error) {
+    dispatch(setRegistrationError(error.response.data));
+    dispatch(setError(error));
+  }
+  dispatch(hiddenLoading());
+};
+
 export default registrationSlice.reducer;

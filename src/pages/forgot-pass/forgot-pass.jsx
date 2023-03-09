@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -15,38 +14,27 @@ function ForgotPass() {
     register,
     handleSubmit,
 
-    formState: { errors, isValid },
+    formState: { errors },
     reset,
   } = useForm({ mode: 'all' });
-  const [locationError, setLocationError] = useState(false);
 
-  const { loading, error, stat, passwords } = useSelector((state) => state.password);
-  const s = useSelector((state) => state.password);
+  const { loading, error, success } = useSelector((state) => state.password);
 
-  console.log(passwords.ok);
   const onSubmit = async (data) => {
     dispatch(postPassword(data));
     reset();
   };
 
-  useEffect(() => {
-    if (passwords.ok) {
-      setLocationError(true);
-    } else {
-      setLocationError(false);
-    }
-  }, [passwords]);
-
   return (
     <div className='wrapper'>
       <div className='auth'>
-        <main className='content-auth'>
+        <main className='content-auth' data-test-id='auth'>
           <div className='container '>
             <div className='auth__item'>
               <h2 className='auth__title'>Cleverland</h2>
 
-              <div className='block-form block-form_email' data-test-id='auth'>
-                {locationError ? (
+              <div className='block-form block-form_email'>
+                {success ? (
                   <SuccessfulResponse />
                 ) : (
                   <div>
@@ -109,13 +97,13 @@ function ForgotPass() {
                         </Link>
                       </div>
                     </div>
+                    {loading ? <Spinner /> : null}
                   </div>
                 )}
               </div>
             </div>
           </div>
         </main>
-        {loading ? <Spinner /> : null}
       </div>
     </div>
   );

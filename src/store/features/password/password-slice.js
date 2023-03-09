@@ -1,40 +1,14 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
   loading: false,
   passwords: [],
+  success: false,
   error: null,
-  stat: null,
-  statusText: null,
 };
-
-export const postPassword = createAsyncThunk(
-  'passwords/postPassword',
-  async (dataForm, { rejectWithValue, dispatch }) => {
-    try {
-      const response = await fetch('https://strapi.cleverland.by/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataForm),
-      });
-
-      if (response.statusText !== 'OK') {
-        throw new Error('error');
-      }
-
-      const data = await response.json();
-
-      return dispatch(setPassword(data));
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 export const passwordSlice = createSlice({
   name: 'passwords',
@@ -42,29 +16,36 @@ export const passwordSlice = createSlice({
   reducers: {
     setPassword: (state, action) => {
       state.passwords = action.payload;
-    },
-  },
-  extraReducers: {
-    [postPassword.fulfilled.type]: (state) => {
-      state.loading = false;
-      state.stat = 'loading';
       state.error = null;
-      state.statusText = null;
+      state.success = true;
+      state.loading = false;
     },
-    [postPassword.pending.type]: (state) => {
+    setPasswordError(state, action) {
+      state.error = 'error';
+      state.loading = false;
+      state.success = false;
+    },
+    showLoading(state) {
       state.loading = true;
-      state.stat = 'resolved';
-      state.error = null;
-      state.statusText = 'OK';
     },
-    [postPassword.rejected]: (state, action) => {
-      state.stat = 'rejected';
+    hiddenLoading(state) {
       state.loading = false;
-      state.error = action.payload;
-      state.statusText = null;
     },
   },
 });
+export const { setPassword, setPasswordError, showLoading, hiddenLoading } = passwordSlice.actions;
 
-export const { setPassword } = passwordSlice.actions;
+export const postPassword = (data) => async (dispatch) => {
+  dispatch(showLoading());
+
+  try {
+    await axios.post('https://strapi.cleverland.by/api/auth/forgot-password', {
+      email: data.email,
+    });
+    dispatch(setPassword());
+  } catch (error) {
+    dispatch(setPasswordError(error));
+  }
+  dispatch(hiddenLoading());
+};
 export default passwordSlice.reducer;

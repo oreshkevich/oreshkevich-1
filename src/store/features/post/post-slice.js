@@ -4,6 +4,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+import { httpService } from '../../../api/api';
 import { tokenData } from '../authorization/authorization-slice';
 
 const initialState = {
@@ -42,9 +43,9 @@ export const postSlice = createSlice({
   initialState,
   reducers: {
     setPosts: (state, action) => {
+      state.isErrorBook = false;
       state.posts = action.payload;
       state.isLoadingBook = false;
-      state.isErrorBook = false;
     },
     setError(state) {
       state.isErrorBook = true;
@@ -78,26 +79,18 @@ export const { setPosts, setError } = postSlice.actions;
 export const booksReducer = postSlice.reducer;
 
 export const getPosts = () => async (dispatch) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token ? localStorage.getItem('token') : tokenData}`,
-    },
-  };
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Bearer ${token ? localStorage.getItem('token') : tokenData}`,
+  //     },
+  //   };
 
   try {
-    const res = await axios.get('https://strapi.cleverland.by/api/books', config);
+    const resp = await httpService.get('/books');
 
-    console.log(res);
-    dispatch(setPosts(res.data));
-    // Work with the response...
+    dispatch(setPosts(resp.data));
   } catch (err) {
-    if (err.response) {
-      dispatch(setError(err.data));
-    } else if (err.request) {
-      console.log(err.request);
-    } else {
-      // Anything else
-    }
+    dispatch(setError(err.data));
   }
 
   //   await axios

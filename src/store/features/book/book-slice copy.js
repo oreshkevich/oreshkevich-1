@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  loadingCategories: true,
-  categories: [],
+  loadingBook: true,
+  books: [],
   error: null,
-  statusCategories: null,
+  status: null,
 };
+
 const token = localStorage.getItem('token');
 
-export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
+export const getSearchId = createAsyncThunk('books/getSearchId', async (id, { rejectWithValue, dispatch }) => {
   try {
-    const response = await fetch('https://strapi.cleverland.by/api/categories', {
+    const response = await fetch(`https://strapi.cleverland.by/api/books/${id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,36 +28,36 @@ export const getCategories = createAsyncThunk('categories/getCategories', async 
 
     const data = await response.json();
 
-    return dispatch(setCategories(data));
+    return dispatch(setBooks(data));
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
 
-export const categorySlice = createSlice({
-  name: 'categories',
+export const bookSlice = createSlice({
+  name: 'books',
   initialState,
   reducers: {
-    setCategories: (state, action) => {
-      state.categories = action.payload;
+    setBooks: (state, action) => {
+      state.books = action.payload;
     },
   },
   extraReducers: {
-    [getCategories.fulfilled]: (state) => {
-      state.loadingCategories = false;
+    [getSearchId.fulfilled]: (state) => {
+      state.loadingBook = false;
       state.status = 'loading';
     },
-    [getCategories.pending]: (state) => {
-      state.loadingCategories = true;
+    [getSearchId.pending]: (state) => {
+      state.loadingBook = true;
       state.status = 'resolved';
     },
-    [getCategories.rejected]: (state, action) => {
+    [getSearchId.rejected]: (state, action) => {
       state.status = 'rejected';
-      state.loadingCategories = false;
+      state.loadingBook = false;
       state.error = action.payload;
     },
   },
 });
 
-export const { setCategories } = categorySlice.actions;
-export default categorySlice.reducer;
+export const { setBooks } = bookSlice.actions;
+export default bookSlice.reducer;

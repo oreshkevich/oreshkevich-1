@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-// import MaskedInput from 'react-text-mask';
 import { RegistrationSuccessful } from '../../components/registration-successful';
 import { RequestErrors } from '../../components/request-errors';
 import { RequestPost } from '../../components/request-post/request-post';
@@ -27,49 +26,60 @@ function Registration() {
     reset,
   } = useForm({ mode: 'all' });
 
-  const { loading, error, stat } = useSelector((state) => state.registration);
+  const { loading, error, errorStatus, success } = useSelector((state) => state.registration);
+  const [locationError, setLocationError] = useState(false);
+  const [locationErrorStatus, setLocationErrorStatus] = useState(false);
+  const [locationData, setLocationData] = useState();
+  const watchUserName = watch('username');
+  const watchPassword = watch('password');
 
   const [currentStep, setCurrentStep] = useState(1);
 
   const onSubmit = (data) => {
     setCurrentStep((prev) => prev + 1);
-
     if (currentStep === 3) {
+      setLocationData(data);
       dispatch(addNewRegistration(data));
       reset();
     }
   };
-  const [locationError, setLocationError] = useState(false);
 
   const handleClickError = () => {
     setLocationError((prevValue) => !prevValue);
   };
 
+  const handleResendingData = () => {
+    onSubmit(locationData);
+  };
+
   useEffect(() => {
-    if (error === 'Bad Request') {
+    if (error?.status === 400) {
       setLocationError(true);
       setCurrentStep(1);
     } else {
       setLocationError(false);
     }
-  }, [error]);
-  const watchUserName = watch('username');
-  const watchPassword = watch('password');
+    if (errorStatus && error?.status !== 400) {
+      setLocationErrorStatus(true);
+    } else {
+      setLocationErrorStatus(false);
+    }
+  }, [error, errorStatus]);
 
   return (
     <div className='wrapper'>
       <div className='auth'>
-        <main className='content-auth'>
+        <main className='content-auth' data-test-id='auth'>
           <div className='container '>
             <div className='auth__item'>
               <h2 className='auth__title'>Cleverland</h2>
 
-              <div className='block-form' data-test-id='auth'>
+              <div className='block-form'>
                 {locationError ? (
                   <RequestErrors handleClickError={handleClickError} />
-                ) : error && error !== 'Bad Request' ? (
-                  <RequestPost />
-                ) : stat === 'loading' ? (
+                ) : locationErrorStatus ? (
+                  <RequestErrors handleClickError={handleClickError} />
+                ) : success ? (
                   <RegistrationSuccessful />
                 ) : (
                   <div>
@@ -77,7 +87,6 @@ function Registration() {
                     <div className='block-form__item'>
                       <div className='block-form__text'>{currentStep} шаг из 3</div>
                     </div>
-
                     <div className='block-form__item item-form'>
                       <form
                         data-test-id='register-form'
@@ -119,6 +128,7 @@ function Registration() {
                     </div>
                   </div>
                 )}
+                {locationErrorStatus && <RequestPost handleResendingData={handleResendingData} />}
               </div>
             </div>
           </div>
