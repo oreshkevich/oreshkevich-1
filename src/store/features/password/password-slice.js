@@ -18,11 +18,9 @@ export const passwordSlice = createSlice({
       state.passwords = action.payload;
       state.error = null;
       state.success = true;
-      state.loading = false;
     },
     setPasswordError(state, action) {
       state.error = 'error';
-      state.loading = false;
       state.success = false;
     },
     showLoading(state) {

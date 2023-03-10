@@ -32,8 +32,8 @@ function Sidebar(props) {
   const exit = () => {
     console.log('hi');
     localStorage.setItem('token', false);
-    // window.location.assign('./');
-    history('/auth');
+    window.location.assign('./');
+    // history('/auth');
   };
   const params = useParams();
 

@@ -20,11 +20,9 @@ export const recoveryPasswordSlice = createSlice({
       state.recoveryPassword = action.payload;
       state.error = null;
       state.success = true;
-      state.loading = false;
     },
     setRecoveryPasswordError(state, action) {
       state.error = 'error';
-      state.loading = false;
       state.success = false;
     },
     showLoading(state) {

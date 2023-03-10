@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { HashRouter, Navigate, redirect, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Auth } from '../pages/auth';
 import { BookPage } from '../pages/book';
@@ -18,12 +18,14 @@ function App() {
   const dispatch = useDispatch();
   const { categories, loadingCategories } = useSelector((state) => state.category);
   const { posts, isLoadingBook, isErrorBook } = useSelector((state) => state.post);
-  //  const stat = useSelector((state) => state.post.stat);
+
   const [location, setLocation] = useState(false);
   const [onShow, setOnShow] = useState(false);
+
   const handleClickHide = () => {
     setLocation((prevValue) => !prevValue);
   };
+
   const handleClickModal = (event) => {
     if (event.target.classList.contains('hamburger') || event.target.classList.contains('overlay')) {
       setLocation(!location);
@@ -58,7 +60,7 @@ function App() {
     token = tokenLocalStorage;
   }
 
-  const { statusText, error } = useSelector((state) => state.authorization);
+  useSelector((state) => state.authorization);
 
   return (
     <HashRouter basename='/'>
@@ -67,8 +69,6 @@ function App() {
         <Route path='/registration' element={token ? <Navigate to='/books/all' /> : <Registration />} />
         <Route path='/auth' element={token ? <Navigate to='/books/all' /> : <Auth />} />
 
-        {/* <Route path='/forgot-pass' element={<ForgotPass />} />
-        <Route path='/forgot-pass/' element={<PasswordRecovery />} /> */}
         <Route
           path='/forgot-pass'
           element={
@@ -81,30 +81,7 @@ function App() {
             )
           }
         />
-        {/* <Route
-          path='/main'
-          element={
-            token ? (
-              <MainPage
-                onClick={handleClickHide}
-                clickHide={clickHide}
-                clickHideMenu={clickHideMenu}
-                onShow={onShow}
-                location={location}
-                categories={categories}
-                posts={posts}
-                loading={loading}
-                isActiveColor={isActiveColor}
-                handleClickModal={handleClickModal}
-                stat={stat}
-                handleMenuToggle={handleMenuToggle}
-                isActiveMenuToggle={isActiveMenuToggle}
-              />
-            ) : (
-              <Navigate replace={true} to='/auth' />
-            )
-          }
-        /> */}
+
         <Route path='/books' element={token ? <Navigate to='/books/all' /> : <Navigate to='/auth' />} />
         <Route
           path='/books/:name'

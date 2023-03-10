@@ -20,17 +20,14 @@ export const registrationSlice = createSlice({
       state.error = false;
       state.errorStatus = false;
       state.success = true;
-      state.loading = false;
     },
 
     setRegistrationError(state, actions) {
       state.error = actions.payload.error;
-      state.loading = false;
       state.success = false;
     },
     setError(state) {
       state.errorStatus = 'error';
-      state.loading = false;
       state.success = false;
     },
     showLoading(state) {

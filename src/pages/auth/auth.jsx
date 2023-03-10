@@ -57,17 +57,11 @@ function Auth() {
   } else {
     token = tokenLocalStorage;
   }
-  const onClick = () => {
+  const onClickTransition = () => {
     if (token) {
       navigate('./books/all');
     }
   };
-
-  //   useEffect(() => {
-  //     if (token) {
-  //       window.location.assign('./books/all');
-  //     }
-  //   }, [token]);
 
   return (
     <div className='wrapper'>
@@ -153,7 +147,7 @@ function Auth() {
                           )}
                         </div>
                         <Link to='/forgot-pass'>{textError ? 'Восстановить?' : 'Забыли логин или пароль?'}</Link>
-                        <button type='submit' onClick={onClick} className='item-form__btn '>
+                        <button type='submit' onClick={onClickTransition} className='item-form__btn '>
                           вход
                         </button>
                       </form>
