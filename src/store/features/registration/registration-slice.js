@@ -22,14 +22,15 @@ export const registrationSlice = createSlice({
       state.success = true;
     },
 
-    setRegistrationError(state, actions) {
-      state.error = actions.payload.error;
+    setRegistrationError(state, action) {
+      state.error = action.payload;
       state.success = false;
     },
-    setError(state) {
-      state.errorStatus = 'error';
-      state.success = false;
+    resetError(state) {
+      state.errorStatus = false;
+      state.error = false;
     },
+
     showLoading(state) {
       state.loading = true;
     },
@@ -38,7 +39,7 @@ export const registrationSlice = createSlice({
     },
   },
 });
-export const { setRegistration, setRegistrationError, setError, showLoading, hiddenLoading } =
+export const { setRegistration, setRegistrationError, resetError, showLoading, hiddenLoading } =
   registrationSlice.actions;
 
 export const addNewRegistration = (data) => async (dispatch) => {
@@ -55,8 +56,7 @@ export const addNewRegistration = (data) => async (dispatch) => {
     });
     dispatch(setRegistration());
   } catch (error) {
-    dispatch(setRegistrationError(error.response.data));
-    dispatch(setError(error));
+    dispatch(setRegistrationError(error.response.statusText));
   }
   dispatch(hiddenLoading());
 };

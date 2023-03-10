@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Spinner } from '../../components/spinner/spinner';
 import { SuccessfulResponse } from '../../components/successful-response/successful-response';
 import { postPassword } from '../../store/features/password/password-slice';
+import { RegExp } from '../../utils/reg-exp';
 
 import './forgot-pass.scss';
 
@@ -62,7 +63,7 @@ function ForgotPass() {
                             {...register('email', {
                               required: true,
                               minLength: 3,
-                              pattern: /^([a-zA-Z][a-zA-Z0-9-_]{2,15})*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/,
+                              pattern: RegExp.email,
                             })}
                           />
                           <label className='form-label' htmlFor='email'>

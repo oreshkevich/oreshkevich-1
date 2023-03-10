@@ -45,12 +45,6 @@ function App() {
   const clickHideMenu = () => {
     setOnShow(true);
   };
-
-  useEffect(() => {
-    dispatch(getPosts());
-    dispatch(getCategories());
-  }, [dispatch]);
-
   const tokenLocalStorage = localStorage.getItem('token');
   let token;
 
@@ -59,6 +53,12 @@ function App() {
   } else {
     token = tokenLocalStorage;
   }
+  useEffect(() => {
+    if (token) {
+      dispatch(getPosts());
+      dispatch(getCategories());
+    }
+  }, [dispatch, token]);
 
   useSelector((state) => state.authorization);
 
@@ -111,52 +111,64 @@ function App() {
         <Route
           path='/books/:name/:id'
           element={
-            <BookPage
-              onClick={handleClickHide}
-              location={location}
-              clickHide={clickHide}
-              clickHideMenu={clickHideMenu}
-              onShow={onShow}
-              categories={categories}
-              handleClickModal={handleClickModal}
-              isErrorBook={isErrorBook}
-              handleMenuToggle={handleMenuToggle}
-              isActiveMenuToggle={isActiveMenuToggle}
-            />
+            token ? (
+              <BookPage
+                onClick={handleClickHide}
+                location={location}
+                clickHide={clickHide}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                categories={categories}
+                handleClickModal={handleClickModal}
+                isErrorBook={isErrorBook}
+                handleMenuToggle={handleMenuToggle}
+                isActiveMenuToggle={isActiveMenuToggle}
+              />
+            ) : (
+              <Navigate to='/auth' />
+            )
           }
         />
         <Route
           path='/terms'
           element={
-            <TermsOfUse
-              onClick={handleClickHide}
-              location={location}
-              clickHideMenu={clickHideMenu}
-              onShow={onShow}
-              clickHide={clickHide}
-              handleClickModal={handleClickModal}
-              isErrorBook={isErrorBook}
-              categories={categories}
-              handleMenuToggle={handleMenuToggle}
-              isActiveMenuToggle={isActiveMenuToggle}
-            />
+            token ? (
+              <TermsOfUse
+                onClick={handleClickHide}
+                location={location}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                clickHide={clickHide}
+                handleClickModal={handleClickModal}
+                isErrorBook={isErrorBook}
+                categories={categories}
+                handleMenuToggle={handleMenuToggle}
+                isActiveMenuToggle={isActiveMenuToggle}
+              />
+            ) : (
+              <Navigate to='/auth' />
+            )
           }
         />
         <Route
           path='/offer'
           element={
-            <OfferPage
-              onClick={handleClickHide}
-              location={location}
-              clickHideMenu={clickHideMenu}
-              onShow={onShow}
-              clickHide={clickHide}
-              handleClickModal={handleClickModal}
-              isErrorBook={isErrorBook}
-              categories={categories}
-              handleMenuToggle={handleMenuToggle}
-              isActiveMenuToggle={isActiveMenuToggle}
-            />
+            token ? (
+              <OfferPage
+                onClick={handleClickHide}
+                location={location}
+                clickHideMenu={clickHideMenu}
+                onShow={onShow}
+                clickHide={clickHide}
+                handleClickModal={handleClickModal}
+                isErrorBook={isErrorBook}
+                categories={categories}
+                handleMenuToggle={handleMenuToggle}
+                isActiveMenuToggle={isActiveMenuToggle}
+              />
+            ) : (
+              <Navigate to='/auth' />
+            )
           }
         />
         <Route path='*' element={<NotFound onClick={handleClickHide} location={location} />} />

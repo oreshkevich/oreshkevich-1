@@ -39,6 +39,7 @@ function Auth() {
     dispatch(postAuthorization(data));
   };
 
+  console.log(error);
   useEffect(() => {
     if (error === 'Bad Request') {
       setTextError(true);

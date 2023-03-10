@@ -109,7 +109,7 @@ function PasswordRecovery() {
                             {...register('password', {
                               required: 'password is required',
                               pattern: {
-                                value: /(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/,
+                                value: RegExp.latinAndNumerals,
                                 message: 'enter valid password',
                               },
                               onBlur: () => {
@@ -117,8 +117,7 @@ function PasswordRecovery() {
                               },
                               onChange: (e) => {
                                 setFocusPassword(false);
-                                if (e.target.value.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) !== -1)
-                                  setCheck(true);
+                                if (e.target.value.search(RegExp.latinAndNumerals) !== -1) setCheck(true);
                               },
                             })}
                           />

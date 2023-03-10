@@ -10,7 +10,7 @@ import { Spinner } from '../../components/spinner/spinner';
 import { StepOne } from '../../components/step-one';
 import { StepThree } from '../../components/step-three';
 import { StepTwo } from '../../components/step-two';
-import { addNewRegistration } from '../../store/features/registration/registration-slice';
+import { addNewRegistration, resetError } from '../../store/features/registration/registration-slice';
 
 import './registration.scss';
 
@@ -26,13 +26,12 @@ function Registration() {
     reset,
   } = useForm({ mode: 'all' });
 
-  const { loading, error, errorStatus, success } = useSelector((state) => state.registration);
+  const { loading, error, success } = useSelector((state) => state.registration);
   const [locationError, setLocationError] = useState(false);
-  const [locationErrorStatus, setLocationErrorStatus] = useState(false);
   const [locationData, setLocationData] = useState();
   const watchUserName = watch('username');
   const watchPassword = watch('password');
-
+  const [textError, setTextError] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
   const onSubmit = (data) => {
@@ -45,7 +44,8 @@ function Registration() {
   };
 
   const handleClickError = () => {
-    setLocationError((prevValue) => !prevValue);
+    dispatch(resetError());
+    setTextError(false);
   };
 
   const handleResendingData = () => {
@@ -53,18 +53,21 @@ function Registration() {
   };
 
   useEffect(() => {
-    if (error?.status === 400) {
-      setLocationError(true);
+    if (error) {
       setCurrentStep(1);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (error === 'Bad Request') {
+      setTextError(true);
+    } else if (error !== 'Bad Request' && error) {
+      setLocationError(true);
+      setTextError(false);
     } else {
       setLocationError(false);
     }
-    if (errorStatus && error?.status !== 400) {
-      setLocationErrorStatus(true);
-    } else {
-      setLocationErrorStatus(false);
-    }
-  }, [error, errorStatus]);
+  }, [error]);
 
   return (
     <div className='wrapper'>
@@ -75,11 +78,12 @@ function Registration() {
               <h2 className='auth__title'>Cleverland</h2>
 
               <div className='block-form'>
-                {locationError ? (
+                {textError ? (
                   <RequestErrors handleClickError={handleClickError} />
-                ) : locationErrorStatus ? (
+                ) : locationError ? (
                   <RequestPost handleResendingData={handleResendingData} />
-                ) : success ? (
+                ) : //
+                success ? (
                   <RegistrationSuccessful />
                 ) : (
                   <div>
