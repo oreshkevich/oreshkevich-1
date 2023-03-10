@@ -1,10 +1,7 @@
-import { Link } from 'react-router-dom';
-
 import './login-errors.scss';
 
 function LoginErrors({ handleClickError }) {
   return (
-    // <div className='block-form block-form_center' data-test-id='status-block'>
     <div data-test-id='status-block'>
       <h3 className='block-form__title'>Вход не выполнен</h3>
       <div className='block-form__item item-form'>
@@ -12,12 +9,8 @@ function LoginErrors({ handleClickError }) {
         <button type='button' className='item-form__btn ' onClick={handleClickError}>
           повторить
         </button>
-        {/* <Link to='/auth' className='item-form__btn item-form__btn_link'>
-          повторить
-        </Link> */}
       </div>
     </div>
-    // </div>
   );
 }
 

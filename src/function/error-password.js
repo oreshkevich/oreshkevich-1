@@ -1,11 +1,13 @@
 import React from 'react';
 
+import { RegExp } from '../utils/reg-exp';
+
 function ErrorPassword({ str }) {
   if (str) {
     if (
-      str.search(/[A-Z]/) !== -1 &&
-      str.search(/[0-9]/) !== -1 &&
-      str.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) === -1
+      str.search(RegExp.capitalLatin) !== -1 &&
+      str.search(RegExp.loginNumber) !== -1 &&
+      str.search(RegExp.latinAndNumerals) === -1
     ) {
       return (
         // eslint-disable-next-line react/jsx-filename-extension
@@ -16,9 +18,9 @@ function ErrorPassword({ str }) {
       );
     }
     if (
-      str.search(/[A-Z]/) !== -1 &&
-      str.search(/[0-9]/) === -1 &&
-      str.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) === -1
+      str.search(RegExp.capitalLatin) !== -1 &&
+      str.search(RegExp.loginNumber) === -1 &&
+      str.search(RegExp.latinAndNumerals) === -1
     ) {
       return (
         <React.Fragment>
@@ -28,9 +30,9 @@ function ErrorPassword({ str }) {
       );
     }
     if (
-      str.search(/[A-Z]/) === -1 &&
-      str.search(/[0-9]/) !== -1 &&
-      str.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) === -1
+      str.search(RegExp.capitalLatin) === -1 &&
+      str.search(RegExp.loginNumber) !== -1 &&
+      str.search(RegExp.latinAndNumerals) === -1
     ) {
       return (
         <React.Fragment>
@@ -40,9 +42,9 @@ function ErrorPassword({ str }) {
       );
     }
     if (
-      str.search(/[A-Z]/) === -1 &&
-      str.search(/[0-9]/) === -1 &&
-      str.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) === -1
+      str.search(RegExp.capitalLatin) === -1 &&
+      str.search(RegExp.loginNumber) === -1 &&
+      str.search(RegExp.latinAndNumerals) === -1
     ) {
       return (
         <React.Fragment>

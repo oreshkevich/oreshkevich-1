@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { InputMask } from 'primereact/inputmask';
 
+import { RegExp } from '../../utils/reg-exp';
+
 function StepThree(props) {
   const [phoneError, setPhoneError] = useState(false);
   const [phone, setPhone] = useState('');
@@ -59,7 +61,7 @@ function StepThree(props) {
           {...props.register('email', {
             required: true,
             minLength: 3,
-            pattern: /^([a-zA-Z][a-zA-Z0-9-_]{2,15})*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/,
+            pattern: RegExp.email,
           })}
         />
 

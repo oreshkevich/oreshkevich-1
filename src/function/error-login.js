@@ -1,8 +1,10 @@
 import React from 'react';
 
+import { RegExp } from '../utils/reg-exp';
+
 function ErrorLogin({ str }) {
   if (str) {
-    if (str.search(/[A-Za-z]/) !== -1 && str.search(/[0-9]/) === -1) {
+    if (str.search(RegExp.loginLatin) !== -1 && str.search(RegExp.loginNumber) === -1) {
       return (
         // eslint-disable-next-line react/jsx-filename-extension
         <React.Fragment>
@@ -11,8 +13,8 @@ function ErrorLogin({ str }) {
       );
     }
     if (
-      (str.search(/[0-9]/) !== -1 && str.search(/[A-Za-z]/) === -1) ||
-      (str.search(/[А-Яа-я]/) !== -1 && str.search(/[0-9]/) !== -1)
+      (str.search(RegExp.loginNumber) !== -1 && str.search(RegExp.loginLatin) === -1) ||
+      (str.search(RegExp.loginRussian) !== -1 && str.search(RegExp.loginNumber) !== -1)
     ) {
       return (
         <React.Fragment>
@@ -20,7 +22,10 @@ function ErrorLogin({ str }) {
         </React.Fragment>
       );
     }
-    if ((str.search(/[А-Яа-я]/) !== -1 && str.search(/[0-9]/) === -1) || str.search(/\s/) !== -1) {
+    if (
+      (str.search(RegExp.loginRussian) !== -1 && str.search(RegExp.loginNumber) === -1) ||
+      str.search(RegExp.exceptForTheSpace) !== -1
+    ) {
       return (
         <React.Fragment>
           Используйте для логина <span className='small-errors'>латинский алфавит</span> и{' '}

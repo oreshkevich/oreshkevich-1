@@ -5,6 +5,7 @@ import eyeClose from '../../assets/svg/eye-close.svg';
 import ok from '../../assets/svg/ok.svg';
 import { ErrorLogin } from '../../function/error-login';
 import { ErrorPassword } from '../../function/error-password';
+import { RegExp } from '../../utils/reg-exp';
 
 function StepOne(props) {
   const [focusPassword, setFocusPassword] = useState(false);
@@ -34,7 +35,7 @@ function StepOne(props) {
           {...props.register('username', {
             required: true,
             validate: {
-              latinLetters: (value) => [/^[a-zA-Z0-9]+$/].every((pattern) => pattern.test(value)),
+              latinLetters: (value) => [RegExp.allLatinAndNumerals].every((pattern) => pattern.test(value)),
             },
 
             onBlur: () => {
@@ -67,7 +68,7 @@ function StepOne(props) {
           {...props.register('password', {
             required: 'password is required',
             pattern: {
-              value: /(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/,
+              value: RegExp.latinAndNumerals,
               message: 'enter valid password',
             },
             onBlur: () => {
@@ -75,7 +76,7 @@ function StepOne(props) {
             },
             onChange: (e) => {
               setFocusPassword(false);
-              if (e.target.value.search(/(?=.*[0-9])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g) !== -1) setCheck(true);
+              if (e.target.value.search(RegExp.latinAndNumerals) !== -1) setCheck(true);
             },
           })}
         />
