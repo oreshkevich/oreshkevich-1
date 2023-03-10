@@ -30,7 +30,6 @@ function Sidebar(props) {
 
   const categories = useSelector((state) => state.category.categories);
   const exit = () => {
-    console.log('hi');
     localStorage.setItem('token', false);
     window.location.assign('./');
     // history('/auth');
