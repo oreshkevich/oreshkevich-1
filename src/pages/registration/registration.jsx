@@ -78,7 +78,7 @@ function Registration() {
                 {locationError ? (
                   <RequestErrors handleClickError={handleClickError} />
                 ) : locationErrorStatus ? (
-                  <RequestErrors handleClickError={handleClickError} />
+                  <RequestPost handleResendingData={handleResendingData} />
                 ) : success ? (
                   <RegistrationSuccessful />
                 ) : (
@@ -128,7 +128,6 @@ function Registration() {
                     </div>
                   </div>
                 )}
-                {locationErrorStatus && <RequestPost handleResendingData={handleResendingData} />}
               </div>
             </div>
           </div>
