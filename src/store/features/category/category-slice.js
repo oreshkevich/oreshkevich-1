@@ -34,7 +34,6 @@ export const categorySlice = createSlice({
 
 export const { setCategories, setError, showLoading, hiddenLoading } = categorySlice.actions;
 export const getCategories = () => async (dispatch) => {
-  //   dispatch(showLoading());
   try {
     const resp = await httpService.get('/categories');
 
@@ -42,6 +41,5 @@ export const getCategories = () => async (dispatch) => {
   } catch (err) {
     dispatch(setError(err.data));
   }
-  //   dispatch(hiddenLoading());
 };
 export default categorySlice.reducer;

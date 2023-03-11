@@ -82,8 +82,7 @@ function Registration() {
                   <RequestErrors handleClickError={handleClickError} />
                 ) : locationError ? (
                   <RequestPost handleResendingData={handleResendingData} />
-                ) : //
-                success ? (
+                ) : success ? (
                   <RegistrationSuccessful />
                 ) : (
                   <div>
