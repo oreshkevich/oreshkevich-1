@@ -4,11 +4,10 @@ import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Auth } from '../pages/auth';
 import { BookPage } from '../pages/book';
-import { ForgotPass } from '../pages/forgot-pass';
 import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
-import { PasswordRecovery } from '../pages/password-recovery';
+import { RecoverPassword } from '../pages/recover-password';
 import { Registration } from '../pages/registration';
 import { TermsOfUse } from '../pages/terms-of-use';
 import { getCategories } from '../store/features/category/category-slice';
@@ -69,18 +68,7 @@ function App() {
         <Route path='/registration' element={token ? <Navigate to='/books/all' /> : <Registration />} />
         <Route path='/auth' element={token ? <Navigate to='/books/all' /> : <Auth />} />
 
-        <Route
-          path='/forgot-pass'
-          element={
-            token ? (
-              <Navigate to='/books/all' />
-            ) : window.location.href.includes('?code=') ? (
-              <PasswordRecovery />
-            ) : (
-              <ForgotPass />
-            )
-          }
-        />
+        <Route path='/forgot-pass' element={token ? <Navigate to='/books/all' /> : <RecoverPassword />} />
 
         <Route path='/books' element={token ? <Navigate to='/books/all' /> : <Navigate to='/auth' />} />
         <Route
