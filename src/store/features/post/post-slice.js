@@ -1,55 +1,51 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
+import { httpService } from '../../../api/api';
 
 const initialState = {
-  loading: false,
   posts: [],
-  error: null,
-  stat: null,
+  isErrorBook: null,
+  isLoadingBook: true,
 };
-
-export const getPosts = createAsyncThunk('posts/getPosts', async (_, { rejectWithValue, dispatch }) => {
-  try {
-    const response = await fetch('https://strapi.cleverland.by/api/books');
-
-    if (response.statusText !== 'OK') {
-      throw new Error('Server Error!');
-    }
-
-    const data = await response.json();
-
-    return dispatch(setPosts(data));
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
 
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
     setPosts: (state, action) => {
+      state.isErrorBook = false;
       state.posts = action.payload;
+      state.isLoadingBook = false;
     },
-  },
-  extraReducers: {
-    [getPosts.fulfilled.type]: (state) => {
-      state.loading = false;
-      state.stat = 'loading';
+    setError(state) {
+      state.isErrorBook = true;
+      state.isLoadingBook = false;
     },
-    [getPosts.pending.type]: (state) => {
-      state.loading = true;
-      state.stat = 'resolved';
+    showLoading(state) {
+      state.isLoadingBook = true;
     },
-    [getPosts.rejected]: (state, action) => {
-      state.stat = 'rejected';
-      state.loading = false;
-      state.error = action.payload;
+    hiddenLoading(state) {
+      state.isLoadingBook = false;
     },
   },
 });
 
-export const { setPosts } = postSlice.actions;
+export const { setPosts, setError, showLoading, hiddenLoading } = postSlice.actions;
+export const booksReducer = postSlice.reducer;
+
+export const getPosts = () => async (dispatch) => {
+  dispatch(showLoading());
+
+  try {
+    const resp = await httpService.get('/books');
+
+    dispatch(setPosts(resp.data));
+  } catch (err) {
+    dispatch(setError(err.data));
+  }
+  dispatch(hiddenLoading());
+};
+
 export default postSlice.reducer;

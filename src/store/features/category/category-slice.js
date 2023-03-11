@@ -1,55 +1,45 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-default-export */
 /* eslint-disable no-param-reassign */
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+
+import { httpService } from '../../../api/api';
 
 const initialState = {
   loadingCategories: true,
   categories: [],
   error: null,
-  statusCategories: null,
 };
-
-export const getCategories = createAsyncThunk('categories/getCategories', async (id, { rejectWithValue, dispatch }) => {
-  try {
-    const response = await fetch('https://strapi.cleverland.by/api/categories');
-
-    if (response.statusText !== 'OK') {
-      throw new Error('Server Error!');
-    }
-
-    const data = await response.json();
-
-    return dispatch(setCategories(data));
-  } catch (error) {
-    return rejectWithValue(error.message);
-  }
-});
 
 export const categorySlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
     setCategories: (state, action) => {
+      state.error = false;
       state.categories = action.payload;
-    },
-  },
-  extraReducers: {
-    [getCategories.fulfilled]: (state) => {
       state.loadingCategories = false;
-      state.status = 'loading';
     },
-    [getCategories.pending]: (state) => {
+    setError(state) {
+      state.error = true;
+      state.loadingCategories = false;
+    },
+    showLoading(state) {
       state.loadingCategories = true;
-      state.status = 'resolved';
     },
-    [getCategories.rejected]: (state, action) => {
-      state.status = 'rejected';
+    hiddenLoading(state) {
       state.loadingCategories = false;
-      state.error = action.payload;
     },
   },
 });
 
-export const { setCategories } = categorySlice.actions;
+export const { setCategories, setError, showLoading, hiddenLoading } = categorySlice.actions;
+export const getCategories = () => async (dispatch) => {
+  try {
+    const resp = await httpService.get('/categories');
+
+    dispatch(setCategories(resp.data));
+  } catch (err) {
+    dispatch(setError(err.data));
+  }
+};
 export default categorySlice.reducer;

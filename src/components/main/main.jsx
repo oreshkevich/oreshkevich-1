@@ -16,7 +16,7 @@ import { Spinner } from '../spinner';
 import './main.scss';
 
 function Main(props) {
-  const { categories, arrDateSort, loading } = props;
+  const { categories, arrDateSort, isLoadingBook, loadingCategories } = props;
 
   const { name } = useParams();
 
@@ -159,11 +159,15 @@ function Main(props) {
 
       {location ? (
         <div className='card__wrap'>
-          {loading ? <Spinner /> : <Cards cards={filteredPosts} noBooks={noBooks} filter={filter} />}
+          {isLoadingBook && loadingCategories ? (
+            <Spinner />
+          ) : (
+            <Cards cards={filteredPosts} noBooks={noBooks} filter={filter} />
+          )}
         </div>
       ) : (
         <div className='card__wrap-vertical'>
-          {loading ? <Spinner /> : <CardsVertical cards={filteredPosts} filter={filter} />}
+          {isLoadingBook && loadingCategories ? <Spinner /> : <CardsVertical cards={filteredPosts} filter={filter} />}
         </div>
       )}
     </div>

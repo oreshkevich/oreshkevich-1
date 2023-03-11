@@ -111,6 +111,9 @@ button {
 .content {
   min-height: calc(100vh - 180px);
 }
+.content-auth {
+  min-height: 100vh;
+}
 
 .active {
   background: linear-gradient(231.58deg, #f83600 -53.35%, #f9d423 297.76%);
@@ -144,6 +147,21 @@ button {
   background: linear-gradient(231.58deg, #f83600 -53.35%, #f9d423 297.76%);
   transform: rotate(180deg);
 }
+
+.form-item {
+  position: relative;
+}
+
+.form-item:focus-within .form-label,
+.form-item input:not(:placeholder-shown) ~ .form-label {
+  top: 3px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: #a7a7a7;
+}
+
 @media (max-width: 468px) {
   .container {
     padding: 0 16px;
