@@ -7,6 +7,7 @@ import { BookPage } from '../pages/book';
 import { MainPage } from '../pages/main';
 import { NotFound } from '../pages/not-found';
 import { OfferPage } from '../pages/offer-page';
+import { Protected } from '../pages/protected';
 import { RecoverPassword } from '../pages/recover-password';
 import { Registration } from '../pages/registration';
 import { TermsOfUse } from '../pages/terms-of-use';
@@ -69,12 +70,11 @@ function App() {
         <Route path='/auth' element={token ? <Navigate to='/books/all' /> : <Auth />} />
 
         <Route path='/forgot-pass' element={token ? <Navigate to='/books/all' /> : <RecoverPassword />} />
-
-        <Route path='/books' element={token ? <Navigate to='/books/all' /> : <Navigate to='/auth' />} />
-        <Route
-          path='/books/:name'
-          element={
-            token ? (
+        <Route element={<Protected />}>
+          <Route path='/books' element={<Navigate to='/books/all' />} />
+          <Route
+            path='/books/:name'
+            element={
               <MainPage
                 onClick={handleClickHide}
                 clickHide={clickHide}
@@ -91,15 +91,11 @@ function App() {
                 handleMenuToggle={handleMenuToggle}
                 isActiveMenuToggle={isActiveMenuToggle}
               />
-            ) : (
-              <Navigate to='/auth' />
-            )
-          }
-        />
-        <Route
-          path='/books/:name/:id'
-          element={
-            token ? (
+            }
+          />
+          <Route
+            path='/books/:name/:id'
+            element={
               <BookPage
                 onClick={handleClickHide}
                 location={location}
@@ -112,15 +108,11 @@ function App() {
                 handleMenuToggle={handleMenuToggle}
                 isActiveMenuToggle={isActiveMenuToggle}
               />
-            ) : (
-              <Navigate to='/auth' />
-            )
-          }
-        />
-        <Route
-          path='/terms'
-          element={
-            token ? (
+            }
+          />
+          <Route
+            path='/terms'
+            element={
               <TermsOfUse
                 onClick={handleClickHide}
                 location={location}
@@ -133,15 +125,11 @@ function App() {
                 handleMenuToggle={handleMenuToggle}
                 isActiveMenuToggle={isActiveMenuToggle}
               />
-            ) : (
-              <Navigate to='/auth' />
-            )
-          }
-        />
-        <Route
-          path='/offer'
-          element={
-            token ? (
+            }
+          />
+          <Route
+            path='/offer'
+            element={
               <OfferPage
                 onClick={handleClickHide}
                 location={location}
@@ -154,11 +142,9 @@ function App() {
                 handleMenuToggle={handleMenuToggle}
                 isActiveMenuToggle={isActiveMenuToggle}
               />
-            ) : (
-              <Navigate to='/auth' />
-            )
-          }
-        />
+            }
+          />
+        </Route>
         <Route path='*' element={<NotFound onClick={handleClickHide} location={location} />} />
       </Routes>
     </HashRouter>
